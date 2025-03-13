@@ -1,6 +1,6 @@
 export const environment = {
     firebaseConfig : {
-        apiKey: "AIzaSyCEh2ljNim0nMYT1oLVWyzEiY3mNAICF7Q",
+        apiKey: process.env["FIREBASE_API"],
         authDomain: "mini-social-network-a9d09.firebaseapp.com",
         projectId: "mini-social-network-a9d09",
         storageBucket: "mini-social-network-a9d09.firebasestorage.app",
