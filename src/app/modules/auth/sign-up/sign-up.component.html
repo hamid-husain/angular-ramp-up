@@ -1,1 +1,50 @@
-<p>sign-up works!</p>
+<div class="form-container mat-elevation-z5">
+  <h1>Signup</h1>
+  <form [formGroup]="signupForm" (ngSubmit)="submit()">
+    <mat-form-field>
+      <input matInput placeholder="Username" formControlName="username" />
+      <mat-error *ngIf="username?.errors?.['required']">
+        Username is required
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Email" formControlName="email" />
+      <mat-error *ngIf="email?.errors?.['required']">
+        Email is required
+      </mat-error>
+      <mat-error *ngIf="email?.errors?.['email']">
+        Enter a valid email
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Password"
+        type="password"
+        formControlName="password" />
+      <mat-error *ngIf="password?.errors?.['required']">
+        Password is required
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Confirm Password"
+        type="password"
+        formControlName="cPassword" />
+      <mat-error *ngIf="cPassword?.errors?.['required']">
+        Confirm password is required
+      </mat-error>
+      <mat-error *ngIf="signupForm?.errors?.['PasswordDoesntMatch']">
+        Passwords should match
+      </mat-error>
+    </mat-form-field>
+    <div class="center margin-top">
+      <button mat-raised-button color="primary">Signup</button>
+    </div>
+    <span class="center margin-top">
+      Already have an account?
+      <a routerLink="/login">Login!</a>
+    </span>
+  </form>
+</div>

@@ -1,0 +1,18 @@
+<mat-toolbar color="primary">
+  Mini-Social-Network
+
+  <ng-container
+    *ngIf="authService.currentUser$ | async as user; else loginButton">
+    <button mat-button (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
+  </ng-container>
+
+  <ng-template #loginButton>
+    <button mat-button routerLink="/login">
+      <mat-icon>login</mat-icon>
+      Login
+    </button>
+  </ng-template>
+</mat-toolbar>
