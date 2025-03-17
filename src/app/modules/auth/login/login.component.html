@@ -24,7 +24,9 @@
       </mat-error>
     </mat-form-field>
     <div class="center margin-top">
-      <button mat-raised-button color="primary">Login</button>
+      <button mat-raised-button color="primary" [disabled]="!loginForm.valid">
+        Login
+      </button>
     </div>
     <span class="center margin-top">
       New to our platform?
