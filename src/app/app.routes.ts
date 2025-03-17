@@ -1,4 +1,9 @@
 import { Routes } from '@angular/router';
+import { LoginComponent } from './modules/auth/login/login.component';
+import { SignUpComponent } from './modules/auth/sign-up/sign-up.component';
+import { AppComponent } from './app.component';
+import { DashboardComponent } from './modules/dashboard/dashboard.component';
+import { authGuard } from './core/guards/auth.guard';
 
 import { AppComponent } from './app.component';
 import { authGuard } from './core/guards/auth.guard';
