@@ -15,6 +15,7 @@ import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 
+import { AuthServicesService } from '../../services/auth-services.service';
 import { AuthServicesService } from '../services/auth-services.service';
 
 @Component({
