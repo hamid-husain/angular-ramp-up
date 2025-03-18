@@ -18,6 +18,33 @@ import { Router, RouterLink } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 
 import { AuthServicesService } from '../services/auth-services.service';
+export function passwordStrengthValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const password = control.value;
+
+    const lengthValid = password && password.length >= 8;
+    const hasNumeric = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    const numericCount = (password.match(/\d/g) || []).length;
+    const specialCount = (password.match(/[!@#$%^&*(),.?":{}|<>]/g) || [])
+      .length;
+
+    if (
+      lengthValid &&
+      hasNumeric &&
+      hasSpecialChar &&
+      numericCount >= 2 &&
+      specialCount >= 2
+    ) {
+      return null;
+    }
+
+    return {
+      passwordStrength: true,
+    };
+  };
+}
 
 export function passwordMatchValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -54,7 +81,10 @@ export class SignUpComponent {
     {
       username: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required]),
+      password: new FormControl('', [
+        Validators.required,
+        passwordStrengthValidator(),
+      ]),
       cPassword: new FormControl('', [Validators.required]),
     },
     { validators: passwordMatchValidator() }

@@ -25,6 +25,10 @@
       <mat-error *ngIf="password?.errors?.['required']">
         Password is required
       </mat-error>
+      <mat-error *ngIf="password?.hasError('passwordStrength')">
+        Password must be at least 8 characters long, and contain at least 2
+        numeric and 2 special characters.
+      </mat-error>
     </mat-form-field>
     <mat-form-field>
       <input
