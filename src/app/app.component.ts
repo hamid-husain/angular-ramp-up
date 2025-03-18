@@ -7,7 +7,7 @@ import { ToolbarComponent } from './shared/toolbar/toolbar.component';
   selector: 'app-root',
   imports: [RouterOutlet, ToolbarComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  styleUrl: './app.component.scss',
 })
 export class AppComponent {
   title = 'mini-social-network';
