@@ -30,7 +30,7 @@ import { DashboardService } from '../../services/dashboard.service';
     FormsModule
   ],
   templateUrl: './article-filter.component.html',
-  styleUrl: './article-filter.component.css'
+  styleUrl: './article-filter.component.scss'
 })
 export class ArticleFilterComponent {
   authors;

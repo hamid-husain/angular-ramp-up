@@ -39,7 +39,7 @@ import { DocumentSnapshot } from 'firebase/firestore';
     MatPaginatorModule
   ],
   templateUrl: './article-list.component.html',
-  styleUrl: './article-list.component.css'
+  styleUrl: './article-list.component.scss'
 })
 export class ArticleListComponent {
 
