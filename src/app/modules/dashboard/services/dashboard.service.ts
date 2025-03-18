@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { getDocs, getFirestore, collection, addDoc, query, where, orderBy, limit, startAfter } from 'firebase/firestore';
+import { getDocs, getFirestore, collection, addDoc, query, where, orderBy, limit, startAfter, DocumentSnapshot } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +12,10 @@ export class DashboardService {
 
   constructor() { }
 
-  async fetchArticles(filter:{author: string, tag: string, created_at: string}, pageSize:number, pageIndex:number){
+  async fetchArticles(filter:{author: string, tag: string, created_at: string}, pageSize:number, lastVisible:DocumentSnapshot|null){
     try {
       const articlesCollection = collection(this.firestore, 'articles');
-      let articleQuery = query(articlesCollection, orderBy('created_at'))
+      let articleQuery = query(articlesCollection, orderBy('created_at'), limit(pageSize))
 
       if(filter.author){
         articleQuery = query(articleQuery,where('author','==',filter.author))
@@ -31,16 +31,19 @@ export class DashboardService {
         articleQuery = query(articleQuery, where('created_at', '>=', selectedDate.getTime()), where('created_at','<',nextDay));
       }
 
-      const skip=pageIndex*pageSize
-      const limitQuery=query(articleQuery, limit(pageSize))
-      const articlesSnapshot = await getDocs(limitQuery);
-      const articleList: any[] = []
+      if(lastVisible){
+        articleQuery = query(articleQuery, startAfter(lastVisible))
+      }
+      const articlesSnapshot = await getDocs(articleQuery);
+      const articleList: any[] = [];
+      let lastVisibleDoc: DocumentSnapshot | null = null;
       articlesSnapshot.forEach((doc) => {
         const article=doc.data()
         articleList.push({
           id: doc.id,
           ...article,
         });
+        lastVisibleDoc = doc;
         if(article['author']){
           this.authors.add(article['author'])
         }
@@ -49,12 +52,41 @@ export class DashboardService {
         }
       });
       console.log(articleList);
-      return articleList;
+      console.log(lastVisibleDoc)
+      return {articleList, lastVisibleDoc};
     } catch (error) {
       console.error('Error fetching articles:', error);
-      return [];
+      return { articleList: [], lastVisibleDoc: null };
     }
   }
+
+  async getArticlesCount(filter:{author: string, tag: string, created_at: string}){
+    try {
+      const articlesCollection = collection(this.firestore, 'articles');
+      let articleQuery = query(articlesCollection)
+
+      if(filter.author){
+        articleQuery = query(articleQuery,where('author','==',filter.author))
+      }
+      if(filter.tag){
+        articleQuery = query(articleQuery, where('tag', '==', filter.tag));
+      }
+      if(filter.created_at){
+        const selectedDate=new Date(filter.created_at);
+        selectedDate.setUTCHours(0, 0, 0, 0);
+        const nextDay = new Date(selectedDate);
+        nextDay.setUTCDate(selectedDate.getUTCDate() + 1);
+        articleQuery = query(articleQuery, where('created_at', '>=', selectedDate.getTime()), where('created_at','<',nextDay));
+      }
+
+      const articlesSnapshot = await getDocs(articleQuery);
+      return articlesSnapshot.size;
+    } catch (error) {
+      console.error('Error counting articles:', error);
+      return 0;
+    }
+  }
+
 
   async addArticle(article: { title: string; desc: string, author:string, created_at:Date }) {
     try {
