@@ -1,0 +1,111 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+import {DashboardService} from '../../services/dashboard.service'
+import { ArticleFilterComponent } from '../article-filter/article-filter.component';
+import { ActivatedRoute, Router } from '@angular/router';
+@Component({
+  selector: 'app-article-list',
+  imports: [
+    CommonModule,
+    MatToolbarModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    CommonModule,
+    MatToolbarModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatDialogModule,
+    FormsModule
+  ],
+  templateUrl: './article-list.component.html',
+  styleUrl: './article-list.component.css'
+})
+export class ArticleListComponent {
+
+  constructor(private dashboardService:DashboardService, private dialog: MatDialog, private activatedRoute: ActivatedRoute, private router:Router){
+
+  }
+  pageSize: number = 10;
+  pageIndex: number = 0;
+  articles: any[] = [];
+  filter = {
+    author: '',
+    created_at: '',
+    tag: ''
+  };
+
+  ngOnInit(){
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.pageIndex = params['pageIndex'] ? +params['pageIndex'] : 0;
+      this.getArticles();
+    });
+  }
+
+  async getArticles(): Promise<void> {
+    try {
+      console.log(this.filter)
+      this.articles = await this.dashboardService.fetchArticles(this.filter, this.pageSize, this.pageIndex)
+      this.articles.forEach(article=>{
+        article.title = this.truncateContent(article.title,20)
+        article.author = this.truncateContent(article.author,12)
+        article.desc= this.truncateContent(article.desc, 100)
+        article.created_at = article.created_at.toDate()
+      })
+      console.log('Fetched articles:', this.articles);
+    } catch (error) {
+      console.error('Error fetching articles:', error);
+    }
+  }
+
+  async saveArticle(article: { title: string; desc: string, author:string, created_at:Date }): Promise<void>{
+    try {
+      await this.dashboardService.addArticle(article)
+      console.log('Saved articles:', article);
+    } catch (error) {
+      console.error('Error fetching articles:', error);
+    }
+  }
+
+  truncateContent(content: string, maxLength: number): string {
+    if (!content) {
+      return '';
+    }
+    if (content.length <= maxLength) {
+      return content;
+    }
+    return content.substring(0, maxLength) + '...';
+  }
+
+  openFilterModal(): void {
+    const dialogRef = this.dialog.open(ArticleFilterComponent, {
+      width: '400px',
+      data: this.filter
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.filter = result;
+        this.getArticles();
+      }
+    });
+  }
+  
+}
