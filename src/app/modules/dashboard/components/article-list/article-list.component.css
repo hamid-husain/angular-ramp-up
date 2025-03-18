@@ -1,0 +1,32 @@
+.article-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter-section{
+  display: flex;
+  justify-content: flex-end; 
+  padding: 8px 0;
+  margin: 16px;
+}
+
+.article-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+  
+.article-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+  
+.card-action {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+}
