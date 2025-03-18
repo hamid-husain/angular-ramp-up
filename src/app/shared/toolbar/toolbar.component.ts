@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
 
 import { AuthServicesService } from '../../modules/auth/services/auth-services.service';
 
@@ -31,9 +32,24 @@ export class ToolbarComponent {
     private router: Router
   ) {}
 
+  constructor(
+    public authService: AuthServicesService,
+    private router: Router,
+    private toast: HotToastService
+  ) {}
+
   logout() {
-    this.authService.logout().subscribe(() => {
-      this.router.navigate(['/']);
-    });
+    this.authService
+      .logout()
+      .pipe(
+        this.toast.observe({
+          loading: 'Logging out....',
+          success: 'Logged out successfully',
+          error: ({ message }) => `there is an error: ${message}`,
+        })
+      )
+      .subscribe(() => {
+        this.router.navigate(['/']);
+      });
   }
 }
