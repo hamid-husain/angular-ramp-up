@@ -1,3 +1,17 @@
-mat-toolbar {
-  justify-content: space-between;
+.brand {
+    font-size: 1.5rem;
+    color: black;
+    font-weight:500;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+mat-toolbar{
+    display: flex;
+    justify-content: space-between  ;
+}
+
+.toolbar-button{
+    justify-content: flex-end;
 }
