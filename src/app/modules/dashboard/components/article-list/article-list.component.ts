@@ -16,8 +16,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ArticleFilterComponent } from '@dashboardComponents/article-filter/article-filter.component';
 import { DashboardService } from '@dashboardServices/dashboard.service';
 import { DocumentSnapshot } from 'firebase/firestore';
+import { RouterLink } from '@angular/router';
 
 interface Article {
+  id: string;
   title: string;
   desc: string;
   author: string;
@@ -51,6 +53,7 @@ interface Filter {
     MatDialogModule,
     FormsModule,
     MatPaginatorModule,
+    RouterLink
   ],
   templateUrl: './article-list.component.html',
   styleUrl: './article-list.component.scss',

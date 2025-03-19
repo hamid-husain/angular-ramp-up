@@ -1,0 +1,28 @@
+<mat-card *ngIf="article" class="article-detail-card">
+  <mat-card-header class="article-header">
+    <mat-card-title class="article-title">{{ article.title }}</mat-card-title>
+    <mat-card-subtitle class="article-meta"
+      >{{ article.author }} |
+      {{ article.created_at.toDate() | date }}</mat-card-subtitle
+    >
+  </mat-card-header>
+
+  <mat-card-content class="article-content">
+    <p>{{ article.desc }}</p>
+  </mat-card-content>
+
+  <mat-card-actions class="article-action">
+    <button mat-button color="primary" *ngIf="isAuthor" (click)="editArticle()">
+      Edit
+    </button>
+    <button mat-button color="warn" *ngIf="isAuthor" (click)="deleteArticle()">
+      Delete Article
+    </button>
+  </mat-card-actions>
+</mat-card>
+
+<div class="back-button-container">
+  <button mat-button routerLink="/dashboard" color="accent">
+    Back to Dashboard
+  </button>
+</div>

@@ -1,0 +1,33 @@
+<div class="create-article-container">
+  <mat-card class="create-article-card">
+    <mat-card-header>
+      <mat-card-title>Create New Article</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content class="margin-top">
+      <form (ngSubmit)="createArticle()">
+        <mat-form-field appearance="fill">
+          <mat-label>Title</mat-label>
+          <input matInput [(ngModel)]="title" name="title" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Description</mat-label>
+          <textarea matInput [(ngModel)]="desc" name="desc" required></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Tag</mat-label>
+          <input matInput [(ngModel)]="tag" name="tag" required />
+        </mat-form-field>
+
+        <div class="actions">
+          <button mat-button color="primary" type="submit">Save Article</button>
+          <button mat-button color="accent" type="button" (click)="cancel()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

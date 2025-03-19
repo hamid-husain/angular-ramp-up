@@ -80,8 +80,6 @@ export class DashboardService {
           this.tags.add(article['tag']);
         }
       });
-      console.log(articleList);
-      console.log(lastVisibleDoc);
       return { articleList, lastVisibleDoc };
     } catch (error) {
       console.error('Error fetching articles:', error);
