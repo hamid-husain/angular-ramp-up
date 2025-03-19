@@ -16,8 +16,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
+import { catchError, throwError } from 'rxjs';
 
-import { AuthServicesService } from '../services/auth-services.service';
+import { AuthServicesService } from '../../services/auth-services.service';
+
 export function passwordStrengthValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const password = control.value;
@@ -126,10 +128,17 @@ export class SignUpComponent {
           loading: 'Signing in....',
           success: 'Signed up successfully',
           error: ({ message }) => `there is an error: ${message}`,
+        }),
+        catchError((err, caught) => {
+          this.toast.close();
+          this.toast.error('An error occurred. Please try again later.');
+          console.log('error: ', err);
+          return throwError(() => err);
         })
       )
-      .subscribe(() => {
-        this.router.navigate(['/dashboard']);
+      .subscribe({
+        next: () => this.router.navigate(['/dashboard']),
+        error: err => console.log('Error: ', err),
       });
   }
 }

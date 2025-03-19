@@ -14,9 +14,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
+import { catchError, throwError } from 'rxjs';
 
 import { AuthServicesService } from '../../services/auth-services.service';
-import { AuthServicesService } from '../services/auth-services.service';
 
 @Component({
   selector: 'app-login',
@@ -68,10 +68,21 @@ export class LoginComponent {
           loading: 'Logging in....',
           success: 'Logged in successfully',
           error: ({ message }) => `there is an error: ${message}`,
+        }),
+        catchError((err, caught) => {
+          this.toast.close();
+          if (err.code === 'auth/invalid-credential') {
+            this.toast.error('Invalid credentials. Please try again.');
+          } else {
+            this.toast.error('An error occurred. Please try again later.');
+          }
+          console.log('error: ', err);
+          return throwError(() => err);
         })
       )
-      .subscribe(() => {
-        this.router.navigate(['/dashboard']);
+      .subscribe({
+        next: () => this.router.navigate(['/dashboard']),
+        error: (err: any) => console.log('Error: ', err),
       });
   }
 }
