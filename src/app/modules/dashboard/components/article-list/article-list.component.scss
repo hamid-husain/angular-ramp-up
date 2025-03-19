@@ -1,7 +1,8 @@
-.article-list-container {
+.article-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  height: 100vh;
+  margin: 0px 20px;
 }
 
 .filter-section{
@@ -29,4 +30,11 @@
   margin-top: auto;
   display: flex;
   justify-content: flex-end;
+}
+
+.footer {
+  margin-top: 20px;
+  padding: 20px;
+  text-align: center;
+  background-color: #f8f8f8;
 }

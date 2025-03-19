@@ -16,6 +16,20 @@ import { ArticleFilterComponent } from '../article-filter/article-filter.compone
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { DocumentSnapshot } from 'firebase/firestore';
+
+interface Article {
+  title: string;
+  desc: string;
+  author: string;
+  created_at: Date;
+}
+
+interface Filter {
+  author: string;
+  created_at: Date | null;
+  tag: string;
+}
+
 @Component({
   selector: 'app-article-list',
   imports: [
@@ -36,28 +50,27 @@ import { DocumentSnapshot } from 'firebase/firestore';
     MatNativeDateModule,
     MatDialogModule,
     FormsModule,
-    MatPaginatorModule
-  ],
+    MatPaginatorModule,
+],
   templateUrl: './article-list.component.html',
   styleUrl: './article-list.component.scss'
 })
+
 export class ArticleListComponent {
-
-  constructor(private dashboardService:DashboardService, private dialog: MatDialog, private activatedRoute: ActivatedRoute, private router:Router){
-
-  }
   pageSize: number = 10;
   pageIndex: number = 0;
   totalArticles: number = 10
   lastVisible: DocumentSnapshot | null = null
   paginatedArticles: any[] = [];
 
-  articles: any[] = [];
-  filter = {
+  articles: Article[] = [];
+  filter: Filter = {
     author: '',
-    created_at: '',
+    created_at: null,
     tag: ''
   };
+
+  constructor(private dashboardService:DashboardService, private dialog: MatDialog, private activatedRoute: ActivatedRoute, private router:Router){ }
 
   ngOnInit(){
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -77,7 +90,6 @@ export class ArticleListComponent {
         article.title = this.truncateContent(article.title,20)
         article.author = this.truncateContent(article.author,12)
         article.desc= this.truncateContent(article.desc, 100)
-        article.created_at = article.created_at.toDate()
       })
       console.log('Fetched articles:', this.articles);
     } catch (error) {
@@ -117,6 +129,8 @@ export class ArticleListComponent {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.filter = result;
+        this.lastVisible=null;
+        this.getArticlesCount();
         this.getArticles();
       }
     });

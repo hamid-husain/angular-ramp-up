@@ -12,7 +12,7 @@ export class DashboardService {
 
   constructor() { }
 
-  async fetchArticles(filter:{author: string, tag: string, created_at: string}, pageSize:number, lastVisible:DocumentSnapshot|null){
+  async fetchArticles(filter:{author: string, tag: string, created_at: Date | null}, pageSize:number, lastVisible:DocumentSnapshot|null){
     try {
       const articlesCollection = collection(this.firestore, 'articles');
       let articleQuery = query(articlesCollection, orderBy('created_at'), limit(pageSize))
@@ -24,11 +24,13 @@ export class DashboardService {
         articleQuery = query(articleQuery, where('tag', '==', filter.tag));
       }
       if(filter.created_at){
-        const selectedDate=new Date(filter.created_at);
-        selectedDate.setUTCHours(0, 0, 0, 0);
-        const nextDay = new Date(selectedDate);
-        nextDay.setUTCDate(selectedDate.getUTCDate() + 1);
-        articleQuery = query(articleQuery, where('created_at', '>=', selectedDate.getTime()), where('created_at','<',nextDay));
+        const selectedDate= new Date()
+        selectedDate.setDate(filter.created_at.getDate());
+        selectedDate.setHours(0, 0, 0, 0);
+        const nextDay = new Date();
+        nextDay.setDate(selectedDate.getDate() + 1);
+        nextDay.setHours(0,0,0,0);
+        articleQuery = query(articleQuery, where('created_at', '>=', selectedDate), where('created_at','<',nextDay));
       }
 
       if(lastVisible){
@@ -42,6 +44,7 @@ export class DashboardService {
         articleList.push({
           id: doc.id,
           ...article,
+          created_at: article['created_at'].toDate()
         });
         lastVisibleDoc = doc;
         if(article['author']){
@@ -60,7 +63,7 @@ export class DashboardService {
     }
   }
 
-  async getArticlesCount(filter:{author: string, tag: string, created_at: string}){
+  async getArticlesCount(filter:{author: string, tag: string, created_at: Date|null}){
     try {
       const articlesCollection = collection(this.firestore, 'articles');
       let articleQuery = query(articlesCollection)
@@ -76,7 +79,7 @@ export class DashboardService {
         selectedDate.setUTCHours(0, 0, 0, 0);
         const nextDay = new Date(selectedDate);
         nextDay.setUTCDate(selectedDate.getUTCDate() + 1);
-        articleQuery = query(articleQuery, where('created_at', '>=', selectedDate.getTime()), where('created_at','<',nextDay));
+        articleQuery = query(articleQuery, where('created_at', '>=', selectedDate.getTime()), where('created_at','<',nextDay.getTime()));
       }
 
       const articlesSnapshot = await getDocs(articleQuery);

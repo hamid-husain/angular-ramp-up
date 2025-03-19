@@ -22,9 +22,11 @@
     </mat-card>
   </div>
 </div>
-<mat-paginator
-  [length]="totalArticles"
-  [pageSize]="pageSize"
-  [pageIndex]="pageIndex"
-  (page)="onPageChange($event)">
-</mat-paginator>
+<footer class="footer">
+  <mat-paginator
+    [length]="totalArticles"
+    [pageSize]="pageSize"
+    [pageIndex]="pageIndex"
+    (page)="onPageChange($event)">
+  </mat-paginator>
+</footer>
