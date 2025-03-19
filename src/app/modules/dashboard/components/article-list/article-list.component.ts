@@ -101,15 +101,6 @@ export class ArticleListComponent {
     this.totalArticles = await this.dashboardService.getArticlesCount(this.filter);
   }
 
-  async saveArticle(article: { title: string; desc: string, author:string, created_at:Date }): Promise<void>{
-    try {
-      await this.dashboardService.addArticle(article)
-      console.log('Saved articles:', article);
-    } catch (error) {
-      console.error('Error fetching articles:', error);
-    }
-  }
-
   truncateContent(content: string, maxLength: number): string {
     if (!content) {
       return '';
