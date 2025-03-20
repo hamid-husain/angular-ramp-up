@@ -13,10 +13,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { ArticleFilterComponent } from '@dashboardComponents/article-filter/article-filter.component';
 import { DashboardService } from '@dashboardServices/dashboard.service';
 import { DocumentSnapshot } from 'firebase/firestore';
-import { RouterLink } from '@angular/router';
 
 interface Article {
   id: string;
@@ -53,7 +53,7 @@ interface Filter {
     MatDialogModule,
     FormsModule,
     MatPaginatorModule,
-    RouterLink
+    RouterLink,
   ],
   templateUrl: './article-list.component.html',
   styleUrl: './article-list.component.scss',
@@ -115,9 +115,14 @@ export class ArticleListComponent implements OnInit {
     );
   }
 
-  async saveArticle(article: { title: string; desc: string, author:string, created_at:Date }): Promise<void>{
+  async saveArticle(article: {
+    title: string;
+    desc: string;
+    author: string;
+    created_at: Date;
+  }): Promise<void> {
     try {
-      await this.dashboardService.addArticle(article)
+      await this.dashboardService.addArticle(article);
       console.log('Saved articles:', article);
     } catch (error) {
       console.error('Error fetching articles:', error);

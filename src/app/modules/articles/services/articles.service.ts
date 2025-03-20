@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import {
-  collection,
   addDoc,
-  getFirestore,
+  collection,
+  deleteDoc,
   doc,
   getDoc,
+  getFirestore,
   updateDoc,
-  deleteDoc,
 } from 'firebase/firestore';
 
 interface Article {

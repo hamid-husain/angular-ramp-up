@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { AuthServicesService } from '@authServices/auth-services.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ArticlesService } from '@articleServices/articles.service';
+import { AuthServicesService } from '@authServices/auth-services.service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -21,13 +21,13 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './create-article.component.html',
   styleUrl: './create-article.component.scss',
 })
-export class CreateArticleComponent {
-  title: string = '';
-  desc: string = '';
-  author: string = '';
+export class CreateArticleComponent implements OnInit {
+  title = '';
+  desc = '';
+  author = '';
   created_at: Date = new Date();
-  tag: string = '';
-  editMode: boolean = false;
+  tag = '';
+  editMode = false;
   articleID: string | null = '';
   user$;
 

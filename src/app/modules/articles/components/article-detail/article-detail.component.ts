@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { ArticlesService } from '@articleServices/articles.service';
 import { AuthServicesService } from '@authServices/auth-services.service';
-import { MatButton } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-article-detail',
@@ -13,9 +13,9 @@ import { RouterLink } from '@angular/router';
   templateUrl: './article-detail.component.html',
   styleUrl: './article-detail.component.scss',
 })
-export class ArticleDetailComponent {
+export class ArticleDetailComponent implements OnInit {
   articleID: string | null = null;
-  isAuthor: boolean = false;
+  isAuthor = false;
   article: any;
   user$;
 

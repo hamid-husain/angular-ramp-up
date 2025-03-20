@@ -1,6 +1,4 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { provideFirebaseApp } from '@angular/fire/app';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [

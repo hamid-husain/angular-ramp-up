@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ToolbarComponent } from '@shared/toolbar/toolbar.component';
 import { RouterOutlet } from '@angular/router';
+import { ToolbarComponent } from '@shared/toolbar/toolbar.component';
 @Component({
   selector: 'app-home',
   imports: [ToolbarComponent, RouterOutlet],

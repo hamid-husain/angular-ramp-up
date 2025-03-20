@@ -24,7 +24,7 @@ import { AuthServicesService } from '../../modules/auth/services/auth-services.s
     CommonModule,
   ],
   templateUrl: './toolbar.component.html',
-  styleUrl: './toolbar.component.css',
+  styleUrl: './toolbar.component.scss',
 })
 export class ToolbarComponent {
   constructor(
