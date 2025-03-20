@@ -1,21 +1,23 @@
-.article-container {
+.article {
   display: flex;
   flex-direction: column;
   height: 100vh;
   margin: 0px 20px;
-}
 
-.filter-section {
-  display: flex;
-  justify-content: flex-end;
-  padding: 8px 0;
-  margin: 16px;
-}
+  &__tools{
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 0;
+    margin: 16px;
+  }
 
-.article-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
 }
 
 .article-card {
