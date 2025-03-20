@@ -11,8 +11,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { DashboardService } from '../../services/dashboard.service'
-import { ArticleFilterComponent } from '../article-filter/article-filter.component';
+import { DashboardService } from '@dashboardServices/dashboard.service'
+import { ArticleFilterComponent } from '@dashboardComponents/article-filter/article-filter.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { DocumentSnapshot } from 'firebase/firestore';

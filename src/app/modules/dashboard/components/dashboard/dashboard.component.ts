@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ArticleListComponent } from "../article-list/article-list.component";
+import { ArticleListComponent } from "@dashboardComponents/article-list/article-list.component";
 
 import { AuthServicesService } from '../auth/services/auth-services.service';
 

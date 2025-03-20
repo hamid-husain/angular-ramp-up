@@ -11,7 +11,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { DashboardService } from '../../services/dashboard.service';
+import { DashboardService } from '@dashboardServices/dashboard.service';
 
 @Component({
   selector: 'app-article-filter',
