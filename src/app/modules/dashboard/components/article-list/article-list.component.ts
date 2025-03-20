@@ -109,8 +109,10 @@ export class ArticleListComponent implements OnInit {
     }
   }
 
-  async getArticlesCount(){
-    this.totalArticles = await this.dashboardService.getArticlesCount(this.filter);
+  async getArticlesCount() {
+    this.totalArticles = await this.dashboardService.getArticlesCount(
+      this.filter
+    );
   }
 
   async saveArticle(article: { title: string; desc: string, author:string, created_at:Date }): Promise<void>{

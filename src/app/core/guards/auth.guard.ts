@@ -12,8 +12,7 @@ export const authGuard: CanActivateFn = (route, state) => {
     map(user => {
       if (user) {
         if (
-          route.routeConfig?.path == 'login' ||
-          route.routeConfig?.path == 'signup'
+          route.routeConfig?.path == 'auth'
         ) {
           router.navigate(['/dashboard']);
           return false;
@@ -21,12 +20,11 @@ export const authGuard: CanActivateFn = (route, state) => {
         return true;
       } else {
         if (
-          route.routeConfig?.path == 'login' ||
-          route.routeConfig?.path == 'signup'
+          route.routeConfig?.path == 'auth'
         ) {
           return true;
         }
-        router.navigate(['/login']);
+        router.navigate(['/auth/login']);
         return false;
       }
     })
