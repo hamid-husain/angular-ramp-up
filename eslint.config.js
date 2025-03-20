@@ -1,15 +1,17 @@
 // @ts-check
-const eslint = require("@eslint/js");
-const tseslint = require("typescript-eslint");
-const angular = require("angular-eslint");
+const eslint = require('@eslint/js');
+const tseslint = require('typescript-eslint');
+const angular = require('angular-eslint');
 const unusedImports = require('eslint-plugin-unused-imports');
+const simpleImports = require('eslint-plugin-simple-import-sort')
 const eslintPluginPrettierRecommended = require('eslint-plugin-prettier/recommended');
 
 module.exports = tseslint.config(
   {
-    files: ["**/*.ts"],
+    files: ['**/*.ts'],
     plugins: {
       // @ts-ignore
+      'simple-import-sort':simpleImports,
       'unused-imports': unusedImports,
     },
     extends: [
@@ -17,24 +19,24 @@ module.exports = tseslint.config(
       ...tseslint.configs.recommended,
       ...tseslint.configs.stylistic,
       ...angular.configs.tsRecommended,
-      eslintPluginPrettierRecommended
+      eslintPluginPrettierRecommended,
     ],
     processor: angular.processInlineTemplates,
     rules: {
-      "@angular-eslint/directive-selector": [
-        "error",
+      '@angular-eslint/directive-selector': [
+        'error',
         {
-          type: "attribute",
-          prefix: "app",
-          style: "camelCase",
+          type: 'attribute',
+          prefix: 'app',
+          style: 'camelCase',
         },
       ],
-      "@angular-eslint/component-selector": [
-        "error",
+      '@angular-eslint/component-selector': [
+        'error',
         {
-          type: "element",
-          prefix: "app",
-          style: "kebab-case",
+          type: 'element',
+          prefix: 'app',
+          style: 'kebab-case',
         },
       ],
       'unused-imports/no-unused-vars': [
@@ -47,19 +49,19 @@ module.exports = tseslint.config(
         },
       ],
       'unused-imports/no-unused-imports': 'error',
-      "simple-import-sort/imports": "error",
-      "simple-import-sort/exports": "error",
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
     },
   },
   {
-    files: ["**/*.html"],
+    files: ['**/*.html'],
     extends: [
       ...angular.configs.templateRecommended,
       ...angular.configs.templateAccessibility,
-      eslintPluginPrettierRecommended
+      eslintPluginPrettierRecommended,
     ],
     rules: {
-      "prettier/prettier": ["error", { "parser": "angular" }]
+      'prettier/prettier': ['error', { parser: 'angular' }],
     },
-  },
+  }
 );
