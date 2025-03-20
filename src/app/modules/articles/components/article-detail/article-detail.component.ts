@@ -11,19 +11,24 @@ import { RouterLink } from '@angular/router';
   selector: 'app-article-detail',
   imports: [MatCardModule, CommonModule, MatButton, RouterLink],
   templateUrl: './article-detail.component.html',
-  styleUrl: './article-detail.component.scss'
+  styleUrl: './article-detail.component.scss',
 })
 export class ArticleDetailComponent {
-  articleID:string|null = null;
+  articleID: string | null = null;
   isAuthor: boolean = false;
   article: any;
-  user$
+  user$;
 
-  constructor(private router: Router, private articleService:ArticlesService, private authService:AuthServicesService, private activatedRoute:ActivatedRoute){
-    this.user$=this.authService.currentUser$
+  constructor(
+    private router: Router,
+    private articleService: ArticlesService,
+    private authService: AuthServicesService,
+    private activatedRoute: ActivatedRoute
+  ) {
+    this.user$ = this.authService.currentUser$;
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.activatedRoute.paramMap.subscribe(params => {
       this.articleID = params.get('id');
       if (this.articleID) {
@@ -51,9 +56,11 @@ export class ArticleDetailComponent {
     this.router.navigate([`article/${this.articleID}/edit`]);
   }
 
-  async deleteArticle(){
+  async deleteArticle() {
     if (this.articleID) {
-      const confirmed = confirm('Are you sure you want to delete this article?');
+      const confirmed = confirm(
+        'Are you sure you want to delete this article?'
+      );
       if (confirmed) {
         try {
           await this.articleService.deleteArticle(this.articleID);

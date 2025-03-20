@@ -1,5 +1,13 @@
 import { Injectable } from '@angular/core';
-import { collection, addDoc, getFirestore, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import {
+  collection,
+  addDoc,
+  getFirestore,
+  doc,
+  getDoc,
+  updateDoc,
+  deleteDoc,
+} from 'firebase/firestore';
 
 interface Article {
   id: string;
@@ -11,14 +19,19 @@ interface Article {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ArticlesService {
-  private firestore=getFirestore()
+  private firestore = getFirestore();
 
-  constructor() { }
+  constructor() {}
 
-  async addArticle(article: { title: string; desc: string, author:string, created_at:Date }) {
+  async addArticle(article: {
+    title: string;
+    desc: string;
+    author: string;
+    created_at: Date;
+  }) {
     try {
       const articlesCollection = collection(this.firestore, 'articles');
       await addDoc(articlesCollection, article);
@@ -28,19 +41,28 @@ export class ArticlesService {
     }
   }
 
-  async loadArticleByID(articleID: string){
-    const docRef=doc(this.firestore, 'articles', articleID);
-    const docSnap = await getDoc(docRef)
+  async loadArticleByID(articleID: string) {
+    const docRef = doc(this.firestore, 'articles', articleID);
+    const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      const article = docSnap.data()
-      return { id: docSnap.id, ...article} as Article;
+      const article = docSnap.data();
+      return { id: docSnap.id, ...article } as Article;
     } else {
       throw new Error('Article not found');
     }
   }
 
-  async updateArticle(id: string, article: { title: string; desc: string; author: string; created_at: Date; tag: string }): Promise<void> {
+  async updateArticle(
+    id: string,
+    article: {
+      title: string;
+      desc: string;
+      author: string;
+      created_at: Date;
+      tag: string;
+    }
+  ): Promise<void> {
     const docRef = doc(this.firestore, 'articles', id);
     await updateDoc(docRef, {
       title: article.title,

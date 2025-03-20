@@ -6,5 +6,9 @@ import { SignUpComponent } from './modules/auth/sign-up/sign-up.component';
 import { DashboardComponent } from './modules/dashboard/dashboard.component';
 
 export const routes: Routes = [
-    {path :'', loadChildren:()=> import('@app/modules/home/home.module').then(m=>m.HomeModule)},
+  {
+    path: '',
+    loadChildren: () =>
+      import('@app/modules/home/home.module').then(m => m.HomeModule),
+  },
 ];

@@ -19,29 +19,34 @@ import { firstValueFrom } from 'rxjs';
     MatCardModule,
   ],
   templateUrl: './create-article.component.html',
-  styleUrl: './create-article.component.scss'
+  styleUrl: './create-article.component.scss',
 })
 export class CreateArticleComponent {
   title: string = '';
   desc: string = '';
   author: string = '';
   created_at: Date = new Date();
-  tag: string = '' ;
+  tag: string = '';
   editMode: boolean = false;
-  articleID: string|null = '';
+  articleID: string | null = '';
   user$;
 
-  constructor(private authService:AuthServicesService, private articleServices:ArticlesService, private router:Router, private activatedRoute:ActivatedRoute){
-    this.user$=this.authService.currentUser$
+  constructor(
+    private authService: AuthServicesService,
+    private articleServices: ArticlesService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {
+    this.user$ = this.authService.currentUser$;
   }
 
-  ngOnInit(){
-    this.user$.subscribe(user=>{
-      if(user){
-        this.author=user.displayName!
+  ngOnInit() {
+    this.user$.subscribe(user => {
+      if (user) {
+        this.author = user.displayName!;
       }
     });
-    this.activatedRoute.paramMap.subscribe((params) => {
+    this.activatedRoute.paramMap.subscribe(params => {
       this.articleID = params.get('id');
       if (this.articleID) {
         this.editMode = true;
@@ -50,18 +55,20 @@ export class CreateArticleComponent {
     });
   }
 
-  async loadArticle(){
+  async loadArticle() {
     if (this.articleID) {
       try {
-        const article = await this.articleServices.loadArticleByID(this.articleID);
+        const article = await this.articleServices.loadArticleByID(
+          this.articleID
+        );
         if (article) {
           const user = await firstValueFrom(this.user$);
-          if(user?.displayName!=article.author){
+          if (user?.displayName != article.author) {
             this.router.navigate(['/dashboard']);
             return;
           }
 
-          console.log(article)
+          console.log(article);
           this.title = article.title;
           this.desc = article.desc;
           this.tag = article.tag;
@@ -72,7 +79,13 @@ export class CreateArticleComponent {
     }
   }
 
-  async saveArticle(article: { title: string; desc: string, author:string, created_at:Date, tag:string }): Promise<void>{
+  async saveArticle(article: {
+    title: string;
+    desc: string;
+    author: string;
+    created_at: Date;
+    tag: string;
+  }): Promise<void> {
     try {
       if (this.editMode && this.articleID) {
         await this.articleServices.updateArticle(this.articleID, article);
@@ -86,20 +99,20 @@ export class CreateArticleComponent {
     }
   }
 
-  async createArticle(){
+  async createArticle() {
     const newArticle = {
       title: this.title,
       desc: this.desc,
       author: this.author,
       created_at: this.created_at,
-      tag: this.tag
+      tag: this.tag,
     };
 
     await this.saveArticle(newArticle);
     this.router.navigate(['/dashboard']);
   }
 
-  cancel(){
-    this.router.navigate(['/dashboard'])
+  cancel() {
+    this.router.navigate(['/dashboard']);
   }
 }
