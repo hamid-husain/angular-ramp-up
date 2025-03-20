@@ -3,6 +3,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./src",
     "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitOverride": true,
@@ -16,7 +17,16 @@
     "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
-    "module": "ES2022"
+    "module": "ES2022",
+    "paths": {
+      "@authServices/*":["app/modules/auth/services/*"],
+      "@authComponents/*":["app/modules/auth/components/*"],
+      "@dashboardServices/*":["app/modules/dashboard/services/*"],
+      "@dashboardComponents/*":["app/modules/dashboard/components/*"],
+      "@articleServices/*":["app/modules/articles/services/*"],
+      "@articleComponents/*":["app/modules/articles/components/*"],
+      "@shared/*":["app/shared/*"],
+    },
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
