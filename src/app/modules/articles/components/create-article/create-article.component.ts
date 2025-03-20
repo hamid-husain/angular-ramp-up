@@ -4,9 +4,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { AuthServicesService } from '../../../auth/services/auth-services.service';
+import { AuthServicesService } from '@authServices/auth-services.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ArticlesService } from '../../services/articles.service';
+import { ArticlesService } from '@articleServices/articles.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-create-article',
@@ -54,6 +55,12 @@ export class CreateArticleComponent {
       try {
         const article = await this.articleServices.loadArticleByID(this.articleID);
         if (article) {
+          const user = await firstValueFrom(this.user$);
+          if(user?.displayName!=article.author){
+            this.router.navigate(['/dashboard']);
+            return;
+          }
+
           console.log(article)
           this.title = article.title;
           this.desc = article.desc;

@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ArticlesService } from '../../services/articles.service';
-import { AuthServicesService } from '../../../auth/services/auth-services.service';
+import { ArticlesService } from '@articleServices/articles.service';
+import { AuthServicesService } from '@authServices/auth-services.service';
 import { MatButton } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 
