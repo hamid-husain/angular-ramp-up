@@ -48,7 +48,7 @@ export class ArticleDetailComponent {
   }
 
   editArticle() {
-    this.router.navigate(['/edit-article', this.articleID]);
+    this.router.navigate([`article/${this.articleID}/edit`]);
   }
 
   async deleteArticle(){
