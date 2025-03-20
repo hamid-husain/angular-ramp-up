@@ -81,11 +81,12 @@ export function passwordMatchValidator(): ValidatorFn {
 export class SignUpComponent {
   signupForm = new FormGroup(
     {
-      username: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
+      username: new FormControl('', [Validators.minLength(3), Validators.required, Validators.maxLength(12)]),
+      email: new FormControl('', [Validators.required, Validators.email, Validators.maxLength(254)]),
       password: new FormControl('', [
         Validators.required,
         passwordStrengthValidator(),
+        Validators.maxLength(20)
       ]),
       cPassword: new FormControl('', [Validators.required]),
     },
@@ -109,6 +110,34 @@ export class SignUpComponent {
   }
   get cPassword() {
     return this.signupForm.get('cPassword');
+  }
+
+  getErrorMessages(control: AbstractControl | null): string[] {
+    if (!control || !control.errors) return [];
+    
+    const errorMessages: string[] = [];
+    const errors = control.errors;
+
+    if (errors['required']) {
+      errorMessages.push('This field is required');
+    }
+    if (errors['minLength']) {
+      errorMessages.push(`Minimum length: ${errors['minLength'].requiredLength}`);
+    }
+    if (errors['maxLength']) {
+      errorMessages.push(`Maximum length: ${errors['maxLength'].requiredLength}`);
+    }
+    if (errors['email']) {
+      errorMessages.push('Enter a valid email');
+    }
+    if (errors['passwordStrength']) {
+      errorMessages.push('Password must be at least 8 characters long, and contain at least 2 numeric and 2 special characters');
+    }
+    if (errors['PasswordDoesntMatch']) {
+      errorMessages.push('Passwords should match');
+    }
+
+    return errorMessages;
   }
 
   submit() {
