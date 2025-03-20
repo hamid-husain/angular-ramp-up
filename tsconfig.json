@@ -19,6 +19,7 @@
     "target": "ES2022",
     "module": "ES2022",
     "paths": {
+      "@app/*":["app/*"],
       "@authServices/*":["app/modules/auth/services/*"],
       "@authComponents/*":["app/modules/auth/components/*"],
       "@dashboardServices/*":["app/modules/dashboard/services/*"],
@@ -26,6 +27,7 @@
       "@articleServices/*":["app/modules/articles/services/*"],
       "@articleComponents/*":["app/modules/articles/components/*"],
       "@shared/*":["app/shared/*"],
+      "@guards/*":["app/core/guards/*"],
     },
   },
   "angularCompilerOptions": {
