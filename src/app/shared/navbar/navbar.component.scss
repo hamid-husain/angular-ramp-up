@@ -1,0 +1,17 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+
+  &__brand {
+    font-size: 1.5rem;
+    color: black;
+    font-weight: 500;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+  }
+
+  &__button {
+    justify-content: flex-end;
+  }
+}

@@ -12,13 +12,13 @@ import { from, switchMap } from 'rxjs';
 })
 export class AuthServicesService {
   currentUser$;
-  isAuthStatus = false;
+  isAuthenticated = false;
 
   constructor(public auth: Auth) {
     this.currentUser$ = authState(this.auth);
 
     this.currentUser$.subscribe(user => {
-      this.isAuthStatus = !!user;
+      this.isAuthenticated = !!user;
     });
   }
 
@@ -36,9 +36,5 @@ export class AuthServicesService {
 
   logout() {
     return from(this.auth.signOut());
-  }
-
-  isAuthenticated() {
-    return this.isAuthStatus;
   }
 }

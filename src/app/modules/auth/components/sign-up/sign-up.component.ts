@@ -76,16 +76,25 @@ export function passwordMatchValidator(): ValidatorFn {
     RouterLink,
   ],
   templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.css',
+  styleUrl: './sign-up.component.scss',
 })
 export class SignUpComponent {
   signupForm = new FormGroup(
     {
-      username: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
+      username: new FormControl('', [
+        Validators.minLength(3),
+        Validators.required,
+        Validators.maxLength(12),
+      ]),
+      email: new FormControl('', [
+        Validators.required,
+        Validators.email,
+        Validators.maxLength(254),
+      ]),
       password: new FormControl('', [
         Validators.required,
         passwordStrengthValidator(),
+        Validators.maxLength(20),
       ]),
       cPassword: new FormControl('', [Validators.required]),
     },
@@ -111,15 +120,46 @@ export class SignUpComponent {
     return this.signupForm.get('cPassword');
   }
 
+  getErrorMessages(control: AbstractControl | null): string[] {
+    if (!control || !control.errors) return [];
+
+    const errorMessages: string[] = [];
+    const errors = control.errors;
+
+    if (errors['required']) {
+      errorMessages.push('This field is required');
+    }
+    if (errors['minLength']) {
+      errorMessages.push(
+        `Minimum length: ${errors['minLength'].requiredLength}`
+      );
+    }
+    if (errors['maxLength']) {
+      errorMessages.push(
+        `Maximum length: ${errors['maxLength'].requiredLength}`
+      );
+    }
+    if (errors['email']) {
+      errorMessages.push('Enter a valid email');
+    }
+    if (errors['passwordStrength']) {
+      errorMessages.push(
+        'Password must be at least 8 characters long, and contain at least 2 numeric and 2 special characters'
+      );
+    }
+    if (errors['PasswordDoesntMatch']) {
+      errorMessages.push('Passwords should match');
+    }
+
+    return errorMessages;
+  }
+
   submit() {
     if (!this.signupForm.valid) {
       return;
     }
 
     const { username, email, password } = this.signupForm.value;
-    console.log(username);
-    console.log(email);
-    console.log(password);
 
     this.authService
       .signup(username!, email!, password!)
@@ -129,7 +169,7 @@ export class SignUpComponent {
           success: 'Signed up successfully',
           error: ({ message }) => `there is an error: ${message}`,
         }),
-        catchError((err, caught) => {
+        catchError(err => {
           this.toast.close();
           this.toast.error('An error occurred. Please try again later.');
           console.log('error: ', err);

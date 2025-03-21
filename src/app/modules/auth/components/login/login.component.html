@@ -1,4 +1,4 @@
-<div class="form-container mat-elevation-z5">
+<div class="form-container margin-top mat-elevation-z5">
   <h1>Login</h1>
   <form [formGroup]="loginForm" (ngSubmit)="submit()">
     <mat-form-field>
@@ -16,7 +16,7 @@
     <mat-form-field>
       <input
         matInput
-        placeholder="Enter your assword"
+        placeholder="Enter your password"
         type="password"
         formControlName="password" />
       <mat-error *ngIf="password?.errors?.['required']">
@@ -24,13 +24,11 @@
       </mat-error>
     </mat-form-field>
     <div class="center margin-top">
-      <button mat-raised-button color="primary" [disabled]="!loginForm.valid">
-        Login
-      </button>
+      <button mat-raised-button color="primary">Login</button>
     </div>
     <span class="center margin-top">
       New to our platform?
-      <a routerLink="/signup">Sign-Up!</a>
+      <a routerLink="/auth/signup">Sign-Up!</a>
     </span>
   </form>
 </div>
