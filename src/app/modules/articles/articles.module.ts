@@ -7,25 +7,25 @@ const routes: Routes = [
   {
     path: 'create',
     loadComponent: () =>
-      import('@articleComponents/create-article/create-article.component').then(
-        m => m.CreateArticleComponent
-      ),
+      import(
+        '@modules/articles/components/create-article/create-article.component'
+      ).then(m => m.CreateArticleComponent),
     canActivate: [authGuard],
   },
   {
     path: ':id/edit',
     loadComponent: () =>
-      import('@articleComponents/create-article/create-article.component').then(
-        m => m.CreateArticleComponent
-      ),
+      import(
+        '@modules/articles/components/create-article/create-article.component'
+      ).then(m => m.CreateArticleComponent),
     canActivate: [authGuard],
   },
   {
     path: ':id',
     loadComponent: () =>
-      import('@articleComponents/article-detail/article-detail.component').then(
-        m => m.ArticleDetailComponent
-      ),
+      import(
+        '@modules/articles/components/article-detail/article-detail.component'
+      ).then(m => m.ArticleDetailComponent),
     canActivate: [authGuard],
   },
 ];

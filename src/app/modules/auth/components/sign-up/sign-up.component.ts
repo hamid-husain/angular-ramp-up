@@ -160,9 +160,6 @@ export class SignUpComponent {
     }
 
     const { username, email, password } = this.signupForm.value;
-    console.log(username);
-    console.log(email);
-    console.log(password);
 
     this.authService
       .signup(username!, email!, password!)
@@ -172,7 +169,7 @@ export class SignUpComponent {
           success: 'Signed up successfully',
           error: ({ message }) => `there is an error: ${message}`,
         }),
-        catchError((err, caught) => {
+        catchError(err => {
           this.toast.close();
           this.toast.error('An error occurred. Please try again later.');
           console.log('error: ', err);

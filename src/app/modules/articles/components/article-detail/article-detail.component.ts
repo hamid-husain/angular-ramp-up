@@ -2,21 +2,24 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
-import { ArticlesService } from '@articleServices/articles.service';
-import { AuthServicesService } from '@authServices/auth-services.service';
+import { Article } from '@app/core/models/article.model';
+import { ArticlesService } from '@modules/articles/services/articles.service';
+import { AuthServicesService } from '@modules/auth/services/auth-services.service';
 
 @Component({
   selector: 'app-article-detail',
-  imports: [MatCardModule, CommonModule, MatButton, RouterLink],
+  imports: [MatCardModule, CommonModule, MatButton, RouterLink, MatChipsModule],
   templateUrl: './article-detail.component.html',
   styleUrl: './article-detail.component.scss',
 })
 export class ArticleDetailComponent implements OnInit {
   articleID: string | null = null;
   isAuthor = false;
-  article: any;
+  article: Article;
+
   user$;
 
   constructor(
@@ -26,6 +29,8 @@ export class ArticleDetailComponent implements OnInit {
     private activatedRoute: ActivatedRoute
   ) {
     this.user$ = this.authService.currentUser$;
+
+    this.article = {} as Article;
   }
 
   ngOnInit() {

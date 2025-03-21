@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Article } from '@app/core/models/article.model';
 import {
   addDoc,
   collection,
@@ -20,8 +21,6 @@ export class DashboardService {
 
   authors = new Set<string>();
   tags = new Set<string>();
-
-  constructor() {}
 
   async fetchArticles(
     filter: { author: string; tag: string; created_at: Date | null },
@@ -63,14 +62,17 @@ export class DashboardService {
         articleQuery = query(articleQuery, startAfter(lastVisible));
       }
       const articlesSnapshot = await getDocs(articleQuery);
-      const articleList: any[] = [];
+      const articleList: Article[] = [];
       let lastVisibleDoc: DocumentSnapshot | null = null;
       articlesSnapshot.forEach(doc => {
         const article = doc.data();
         articleList.push({
           id: doc.id,
-          ...article,
+          title: article['title'],
+          desc: article['desc'],
+          tags: article['tags'],
           created_at: article['created_at'].toDate(),
+          author: article['author'],
         });
         lastVisibleDoc = doc;
         if (article['author']) {

@@ -9,28 +9,17 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
-import { ArticleFilterComponent } from '@dashboardComponents/article-filter/article-filter.component';
-import { DashboardService } from '@dashboardServices/dashboard.service';
+import { Article } from '@app/core/models/article.model';
+import { Filter } from '@app/core/models/filter.model';
+import { ArticleCardComponent } from '@modules/dashboard/components/article-card/article-card.component';
+import { ArticleFilterComponent } from '@modules/dashboard/components/article-filter/article-filter.component';
+import { DashboardService } from '@modules/dashboard/services/dashboard.service';
 import { DocumentSnapshot } from 'firebase/firestore';
-
-interface Article {
-  id: string;
-  title: string;
-  desc: string;
-  author: string;
-  created_at: Date;
-}
-
-interface Filter {
-  author: string;
-  created_at: Date | null;
-  tag: string;
-}
 
 @Component({
   selector: 'app-article-list',
@@ -54,6 +43,7 @@ interface Filter {
     FormsModule,
     MatPaginatorModule,
     RouterLink,
+    ArticleCardComponent,
   ],
   templateUrl: './article-list.component.html',
   styleUrl: './article-list.component.scss',
@@ -63,7 +53,7 @@ export class ArticleListComponent implements OnInit {
   pageIndex = 0;
   totalArticles = 10;
   lastVisible: DocumentSnapshot | null = null;
-  paginatedArticles: any[] = [];
+  paginatedArticles: Article[] = [];
 
   articles: Article[] = [];
   filter: Filter = {
@@ -80,6 +70,11 @@ export class ArticleListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    const savedFilter = localStorage.getItem('articleFilter');
+    if (savedFilter) {
+      this.filter = JSON.parse(savedFilter);
+    }
+
     this.activatedRoute.queryParams.subscribe(params => {
       this.pageIndex = params['pageIndex'] ? +params['pageIndex'] : 0;
       this.getArticles();
@@ -151,13 +146,35 @@ export class ArticleListComponent implements OnInit {
         this.lastVisible = null;
         this.getArticlesCount();
         this.getArticles();
+
+        localStorage.setItem('articleFilter', JSON.stringify(this.filter));
       }
     });
   }
 
-  onPageChange(event: any): void {
+  onPageChange(event: PageEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.getArticles();
+  }
+
+  isFilterApplied(): boolean {
+    return (
+      this.filter.author.length > 0 ||
+      this.filter.created_at != null ||
+      this.filter.tag.length > 0
+    );
+  }
+
+  clearFilter(): void {
+    this.filter = {
+      author: '',
+      created_at: null,
+      tag: '',
+    };
+    localStorage.removeItem('articleFilter');
+    this.lastVisible = null;
+    this.getArticles();
+    this.getArticlesCount();
   }
 }

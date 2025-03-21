@@ -6,9 +6,9 @@ const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('@dashboardComponents/dashboard/dashboard.component').then(
-        m => m.DashboardComponent
-      ),
+      import(
+        '@modules/dashboard/components/dashboard/dashboard.component'
+      ).then(m => m.DashboardComponent),
   },
 ];
 

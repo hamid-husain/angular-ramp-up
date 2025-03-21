@@ -1,13 +1,42 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ArticlesService } from '@articleServices/articles.service';
-import { AuthServicesService } from '@authServices/auth-services.service';
+import { ArticlesService } from '@modules/articles/services/articles.service';
+import { AuthServicesService } from '@modules/auth/services/auth-services.service';
 import { firstValueFrom } from 'rxjs';
+
+function tagsValidator(control: AbstractControl): ValidationErrors | null {
+  const tags: string[] = control.value
+    ? control.value
+        .split(',')
+        .map((tag: string) => tag.trim())
+        .filter((tag: string) => tag !== '')
+    : [];
+
+  if (tags.length > 5) {
+    return { maxTagsExceeded: true };
+  }
+
+  const invalidTag = tags.find(tag => tag.length > 12);
+  if (invalidTag) {
+    return { tagTooLong: true };
+  }
+
+  return null;
+}
 
 @Component({
   selector: 'app-create-article',
@@ -17,16 +46,17 @@ import { firstValueFrom } from 'rxjs';
     MatFormFieldModule,
     MatButtonModule,
     MatCardModule,
+    CommonModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './create-article.component.html',
   styleUrl: './create-article.component.scss',
 })
 export class CreateArticleComponent implements OnInit {
-  title = '';
-  desc = '';
+  articleForm: FormGroup;
   author = '';
   created_at: Date = new Date();
-  tag = '';
+  tags: string[] = [];
   editMode = false;
   articleID: string | null = '';
   user$;
@@ -38,6 +68,18 @@ export class CreateArticleComponent implements OnInit {
     private activatedRoute: ActivatedRoute
   ) {
     this.user$ = this.authService.currentUser$;
+
+    this.articleForm = new FormGroup({
+      title: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(40),
+      ]),
+      desc: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(100),
+      ]),
+      tagInput: new FormControl('', [tagsValidator]),
+    });
   }
 
   ngOnInit() {
@@ -55,6 +97,13 @@ export class CreateArticleComponent implements OnInit {
     });
   }
 
+  updateTags() {
+    this.tags = this.articleForm.value.tagInput
+      .split(',')
+      .map((tag: string) => tag.trim())
+      .filter((tag: string) => tag !== '');
+  }
+
   async loadArticle() {
     if (this.articleID) {
       try {
@@ -69,9 +118,11 @@ export class CreateArticleComponent implements OnInit {
           }
 
           console.log(article);
-          this.title = article.title;
-          this.desc = article.desc;
-          this.tag = article.tag;
+          this.articleForm.patchValue({
+            title: article.title,
+            desc: article.desc,
+            tagInput: article.tags.join(', '),
+          });
         }
       } catch (error) {
         console.error('Error loading article for editing:', error);
@@ -84,7 +135,7 @@ export class CreateArticleComponent implements OnInit {
     desc: string;
     author: string;
     created_at: Date;
-    tag: string;
+    tags: string[];
   }): Promise<void> {
     try {
       if (this.editMode && this.articleID) {
@@ -100,12 +151,15 @@ export class CreateArticleComponent implements OnInit {
   }
 
   async createArticle() {
+    if (!this.articleForm.valid) {
+      return;
+    }
     const newArticle = {
-      title: this.title,
-      desc: this.desc,
+      title: this.articleForm.value.title,
+      desc: this.articleForm.value.desc,
       author: this.author,
       created_at: this.created_at,
-      tag: this.tag,
+      tags: this.tags,
     };
 
     await this.saveArticle(newArticle);

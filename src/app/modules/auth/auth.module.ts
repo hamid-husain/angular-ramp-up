@@ -5,14 +5,14 @@ const routes: Routes = [
   {
     path: 'login',
     loadComponent: () =>
-      import('@authComponents/login/login.component').then(
+      import('@modules/auth/components/login/login.component').then(
         m => m.LoginComponent
       ),
   },
   {
     path: 'signup',
     loadComponent: () =>
-      import('@authComponents/sign-up/sign-up.component').then(
+      import('@modules/auth/components/sign-up/sign-up.component').then(
         m => m.SignUpComponent
       ),
   },

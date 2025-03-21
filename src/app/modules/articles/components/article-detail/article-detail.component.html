@@ -1,30 +1,38 @@
 <mat-card *ngIf="article" class="article">
+  <mat-card-actions class="article__actions">
+    <button mat-button routerLink="/dashboard" color="accent">
+      Back to Dashboard
+    </button>
+    <div class="article__action__edit">
+      <button
+        mat-button
+        color="primary"
+        *ngIf="isAuthor"
+        (click)="editArticle()">
+        Edit
+      </button>
+      <button
+        mat-flat-button
+        color="warn"
+        *ngIf="isAuthor"
+        (click)="deleteArticle()">
+        Delete
+      </button>
+    </div>
+  </mat-card-actions>
   <mat-card-header class="article__header">
     <mat-card-title class="article__header_title">{{
       article.title
     }}</mat-card-title>
     <mat-card-subtitle class="article__header__meta"
-      >{{ article.author }} |
-      {{ article.created_at.toDate() | date }}</mat-card-subtitle
+      >{{ article.author }} | {{ article.created_at | date }}</mat-card-subtitle
     >
+    <mat-chip-set class="article__header__tags">
+      <mat-chip *ngFor="let tag of article.tags">{{ tag }}</mat-chip>
+    </mat-chip-set>
   </mat-card-header>
 
   <mat-card-content class="article__content">
     <p class="article__content__description">{{ article.desc }}</p>
   </mat-card-content>
-
-  <mat-card-actions class="article__action">
-    <button mat-button color="primary" *ngIf="isAuthor" (click)="editArticle()">
-      Edit
-    </button>
-    <button mat-button color="warn" *ngIf="isAuthor" (click)="deleteArticle()">
-      Delete Article
-    </button>
-  </mat-card-actions>
 </mat-card>
-
-<div class="back-button-container">
-  <button mat-button routerLink="/dashboard" color="accent">
-    Back to Dashboard
-  </button>
-</div>

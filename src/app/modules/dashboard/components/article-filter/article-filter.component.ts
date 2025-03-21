@@ -15,7 +15,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { DashboardService } from '@dashboardServices/dashboard.service';
+import { Filter } from '@app/core/models/filter.model';
+import { DashboardService } from '@modules/dashboard/services/dashboard.service';
 
 @Component({
   selector: 'app-article-filter',
@@ -37,27 +38,27 @@ import { DashboardService } from '@dashboardServices/dashboard.service';
   styleUrl: './article-filter.component.scss',
 })
 export class ArticleFilterComponent {
-  authors;
-  tags;
+  authors: string[];
+  tags: string[];
+
+  filter: Filter = {
+    author: '',
+    created_at: null,
+    tag: '',
+  };
 
   constructor(
     private dashboardService: DashboardService,
     private dialogRef: MatDialogRef<ArticleFilterComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: Filter
   ) {
     if (data) {
       this.filter = { ...data };
     }
 
-    this.authors = this.dashboardService.authors;
-    this.tags = this.dashboardService.tags;
+    this.authors = [...this.dashboardService.authors];
+    this.tags = [...this.dashboardService.tags];
   }
-
-  filter = {
-    author: '',
-    created_at: '',
-    tag: '',
-  };
 
   applyFilters() {
     this.dialogRef.close(this.filter);

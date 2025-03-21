@@ -9,6 +9,11 @@
     justify-content: flex-end;
     padding: 8px 0;
     margin: 16px;
+
+    &__filter-applied {
+      background-color: #1976d2 !important;
+      color: white !important;
+    }
   }
 
   &__list {
@@ -18,20 +23,6 @@
     white-space: pre-wrap;
     word-wrap: break-word;
   }
-}
-
-.article-card {
-  display: flex;
-  flex-direction: column;
-  background-color: #f9f9f9;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.card-action {
-  margin-top: auto;
-  display: flex;
-  justify-content: flex-end;
 }
 
 .footer {

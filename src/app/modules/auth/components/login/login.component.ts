@@ -69,7 +69,7 @@ export class LoginComponent {
           success: 'Logged in successfully',
           error: ({ message }) => `there is an error: ${message}`,
         }),
-        catchError((err, caught) => {
+        catchError(err => {
           this.toast.close();
           if (err.code === 'auth/invalid-credential') {
             this.toast.error('Invalid credentials. Please try again.');
@@ -82,7 +82,7 @@ export class LoginComponent {
       )
       .subscribe({
         next: () => this.router.navigate(['/dashboard']),
-        error: (err: any) => console.log('Error: ', err),
+        error: err => console.log('Error: ', err),
       });
   }
 }

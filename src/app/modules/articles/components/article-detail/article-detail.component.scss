@@ -18,6 +18,13 @@
       margin: 0;
     }
 
+    &__tags {
+      mat-chip {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
     &__meta {
       font-size: 1rem;
       color: #555;
@@ -49,8 +56,12 @@
 
   &__actions {
     display: flex;
-    justify-content: flex-end;
-    padding-top: 16px;
+    justify-content: space-between;
+
+    &__edit {
+      display: flex;
+      justify-content: flex-end;
+    }
   }
 }
 
