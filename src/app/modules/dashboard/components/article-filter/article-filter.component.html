@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>Filter Articles</h2>
+<mat-dialog-content>
+  <mat-form-field appearance="fill">
+    <mat-label>Author</mat-label>
+    <mat-select [(value)]="filter.author">
+      <mat-option value="">All</mat-option>
+      <mat-option *ngFor="let author of authors" [value]="author">{{
+        author
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Created At</mat-label>
+    <input
+      matInput
+      [(ngModel)]="filter.created_at"
+      [matDatepicker]="picker"
+      placeholder="Select a date" />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Tag</mat-label>
+    <mat-select [(value)]="filter.tag">
+      <mat-option value="">All</mat-option>
+      <mat-option *ngFor="let tag of tags" [value]="tag">{{ tag }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="closeDialog()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="applyFilters()">
+    Apply Filters
+  </button>
+</mat-dialog-actions>

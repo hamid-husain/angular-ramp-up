@@ -29,11 +29,6 @@ import { AuthServicesService } from '../../modules/auth/services/auth-services.s
 export class ToolbarComponent {
   constructor(
     public authService: AuthServicesService,
-    private router: Router
-  ) {}
-
-  constructor(
-    public authService: AuthServicesService,
     private router: Router,
     private toast: HotToastService
   ) {}
