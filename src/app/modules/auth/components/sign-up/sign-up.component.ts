@@ -25,19 +25,20 @@ export function passwordStrengthValidator(): ValidatorFn {
     const password = control.value;
 
     const lengthValid = password && password.length >= 8;
-    const hasNumeric = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    // const hasNumeric = /\d/.test(password);
+    // const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
-    const numericCount = (password.match(/\d/g) || []).length;
-    const specialCount = (password.match(/[!@#$%^&*(),.?":{}|<>]/g) || [])
-      .length;
+    // const numericCount = (password.match(/\d/g) || []).length;
+    // const specialCount = (password.match(/[!@#$%^&*(),.?":{}|<>]/g) || [])
+    //   .length;
 
     if (
-      lengthValid &&
-      hasNumeric &&
-      hasSpecialChar &&
-      numericCount >= 2 &&
-      specialCount >= 2
+      lengthValid
+      // &&
+      // hasNumeric &&
+      // hasSpecialChar &&
+      // numericCount >= 2 &&
+      // specialCount >= 2
     ) {
       return null;
     }
@@ -156,6 +157,37 @@ export class SignUpComponent {
 
   submit() {
     if (!this.signupForm.valid) {
+      const usernameLength = this.username?.value?.length || 0;
+      if (usernameLength < 3) {
+        this.toast.error('Username should be at least 3 characters');
+      }
+
+      if (this.password?.value !== this.cPassword?.value) {
+        this.toast.error('Password and Confirm Password should match');
+      }
+
+      const password = this.password?.value;
+      if (password) {
+        const isPasswordLengthValid = password.length >= 8;
+        const hasNumeric = /\d/.test(password);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        const numericCount = (password.match(/\d/g) || []).length;
+        const specialCount = (password.match(/[!@#$%^&*(),.?":{}|<>]/g) || [])
+          .length;
+
+        if (
+          !isPasswordLengthValid ||
+          !hasNumeric ||
+          !hasSpecialChar ||
+          numericCount < 2 ||
+          specialCount < 2
+        ) {
+          this.toast.error(
+            'Password must be at least 8 characters long, and contain at least 2 numeric and 2 special characters'
+          );
+        }
+      }
+
       return;
     }
 
@@ -172,13 +204,12 @@ export class SignUpComponent {
         catchError(err => {
           this.toast.close();
           this.toast.error('An error occurred. Please try again later.');
-          console.log('error: ', err);
           return throwError(() => err);
         })
       )
       .subscribe({
         next: () => this.router.navigate(['/dashboard']),
-        error: err => console.log('Error: ', err),
+        error: err => console.error('Error: ', err),
       });
   }
 }

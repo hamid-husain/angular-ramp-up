@@ -1,17 +1,27 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { User } from '@angular/fire/auth';
 import { MatButton } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RouterLink } from '@angular/router';
 import { Article } from '@app/core/models/article.model';
+import { DeleteConfirmationComponent } from '@modules/articles/components/delete-confirmation/delete-confirmation.component';
 import { ArticlesService } from '@modules/articles/services/articles.service';
 import { AuthServicesService } from '@modules/auth/services/auth-services.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-article-detail',
-  imports: [MatCardModule, CommonModule, MatButton, RouterLink, MatChipsModule],
+  imports: [
+    MatCardModule,
+    CommonModule,
+    MatButton,
+    MatChipsModule,
+    MatIconModule,
+  ],
   templateUrl: './article-detail.component.html',
   styleUrl: './article-detail.component.scss',
 })
@@ -20,13 +30,14 @@ export class ArticleDetailComponent implements OnInit {
   isAuthor = false;
   article: Article;
 
-  user$;
+  user$: Observable<User | null>;
 
   constructor(
     private router: Router,
     private articleService: ArticlesService,
     private authService: AuthServicesService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private dialog: MatDialog
   ) {
     this.user$ = this.authService.currentUser$;
 
@@ -40,6 +51,10 @@ export class ArticleDetailComponent implements OnInit {
         this.loadArticle();
       }
     });
+  }
+
+  backToDashboard() {
+    this.router.navigate(['/dashboard']);
   }
 
   async loadArticle() {
@@ -61,19 +76,23 @@ export class ArticleDetailComponent implements OnInit {
     this.router.navigate([`article/${this.articleID}/edit`]);
   }
 
+  openDeleteConfirmationDialog() {
+    const dialogRef = this.dialog.open(DeleteConfirmationComponent);
+
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        this.deleteArticle();
+      }
+    });
+  }
+
   async deleteArticle() {
     if (this.articleID) {
-      const confirmed = confirm(
-        'Are you sure you want to delete this article?'
-      );
-      if (confirmed) {
-        try {
-          await this.articleService.deleteArticle(this.articleID);
-          console.log('Article deleted successfully');
-          this.router.navigate(['/dashboard']);
-        } catch (error) {
-          console.error('Error deleting article:', error);
-        }
+      try {
+        await this.articleService.deleteArticle(this.articleID);
+        this.router.navigate(['/dashboard']);
+      } catch (error) {
+        console.error('Error deleting article:', error);
       }
     }
   }

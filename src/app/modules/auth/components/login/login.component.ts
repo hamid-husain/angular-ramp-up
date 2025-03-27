@@ -59,8 +59,6 @@ export class LoginComponent {
     }
 
     const { email, password } = this.loginForm.value;
-    console.log(email);
-    console.log(password);
     this.authService
       .login(email!, password!)
       .pipe(
@@ -76,13 +74,12 @@ export class LoginComponent {
           } else {
             this.toast.error('An error occurred. Please try again later.');
           }
-          console.log('error: ', err);
           return throwError(() => err);
         })
       )
       .subscribe({
         next: () => this.router.navigate(['/dashboard']),
-        error: err => console.log('Error: ', err),
+        error: err => console.error('Error: ', err),
       });
   }
 }

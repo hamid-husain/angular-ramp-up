@@ -1,7 +1,7 @@
 <mat-card *ngIf="article" class="article">
   <mat-card-actions class="article__actions">
-    <button mat-button routerLink="/dashboard" color="accent">
-      Back to Dashboard
+    <button mat-button (click)="backToDashboard()" color="accent">
+      <mat-icon>arrow_back</mat-icon> Back to Dashboard
     </button>
     <div class="article__action__edit">
       <button
@@ -9,13 +9,15 @@
         color="primary"
         *ngIf="isAuthor"
         (click)="editArticle()">
+        <mat-icon>edit</mat-icon>
         Edit
       </button>
       <button
         mat-flat-button
         color="warn"
         *ngIf="isAuthor"
-        (click)="deleteArticle()">
+        (click)="openDeleteConfirmationDialog()">
+        <mat-icon>delete</mat-icon>
         Delete
       </button>
     </div>

@@ -70,12 +70,12 @@ export class ArticleListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const savedFilter = localStorage.getItem('articleFilter');
-    if (savedFilter) {
-      this.filter = JSON.parse(savedFilter);
-    }
-
     this.activatedRoute.queryParams.subscribe(params => {
+      this.filter.author = params['author'] || '';
+      this.filter.tag = params['tag'] || '';
+      this.filter.created_at = params['created_at']
+        ? new Date(params['created_at'])
+        : null;
       this.pageIndex = params['pageIndex'] ? +params['pageIndex'] : 0;
       this.getArticles();
       this.getArticlesCount();
@@ -84,7 +84,6 @@ export class ArticleListComponent implements OnInit {
 
   async getArticles(): Promise<void> {
     try {
-      console.log(this.filter);
       const { articleList, lastVisibleDoc } =
         await this.dashboardService.fetchArticles(
           this.filter,
@@ -98,7 +97,6 @@ export class ArticleListComponent implements OnInit {
         article.author = this.truncateContent(article.author, 12);
         article.desc = this.truncateContent(article.desc, 100);
       });
-      console.log('Fetched articles:', this.articles);
     } catch (error) {
       console.error('Error fetching articles:', error);
     }
@@ -118,7 +116,6 @@ export class ArticleListComponent implements OnInit {
   }): Promise<void> {
     try {
       await this.dashboardService.addArticle(article);
-      console.log('Saved articles:', article);
     } catch (error) {
       console.error('Error fetching articles:', error);
     }
@@ -140,15 +137,9 @@ export class ArticleListComponent implements OnInit {
       data: this.filter,
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.filter = result;
-        this.lastVisible = null;
-        this.getArticlesCount();
-        this.getArticles();
-
-        localStorage.setItem('articleFilter', JSON.stringify(this.filter));
-      }
+    dialogRef.afterClosed().subscribe(() => {
+      this.getArticlesCount();
+      this.getArticles();
     });
   }
 
@@ -172,7 +163,15 @@ export class ArticleListComponent implements OnInit {
       created_at: null,
       tag: '',
     };
-    localStorage.removeItem('articleFilter');
+    this.router.navigate([], {
+      queryParams: {
+        author: null,
+        tag: null,
+        created_at: null,
+        pageIndex: null,
+      },
+      queryParamsHandling: 'merge',
+    });
     this.lastVisible = null;
     this.getArticles();
     this.getArticlesCount();

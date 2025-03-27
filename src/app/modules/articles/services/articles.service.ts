@@ -26,7 +26,6 @@ export class ArticlesService {
     try {
       const articlesCollection = collection(this.firestore, 'articles');
       await addDoc(articlesCollection, article);
-      console.log('Article added successfully!');
     } catch (error) {
       console.error('Error adding article:', error);
     }

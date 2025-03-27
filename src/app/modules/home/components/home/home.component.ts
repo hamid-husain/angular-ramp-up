@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from '@shared/navbar/navbar.component';
 @Component({
   selector: 'app-home',
@@ -7,4 +7,8 @@ import { NavbarComponent } from '@shared/navbar/navbar.component';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent {}
+export class HomeComponent {
+  constructor(private router: Router) {
+    this.router.navigate(['/auth/login']);
+  }
+}

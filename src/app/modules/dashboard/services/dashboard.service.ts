@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Article } from '@app/core/models/article.model';
+import { Filter } from '@app/core/models/filter.model';
 import {
   addDoc,
   collection,
@@ -23,7 +24,7 @@ export class DashboardService {
   tags = new Set<string>();
 
   async fetchArticles(
-    filter: { author: string; tag: string; created_at: Date | null },
+    filter: Filter,
     pageSize: number,
     lastVisible: DocumentSnapshot | null
   ) {
@@ -63,7 +64,8 @@ export class DashboardService {
       }
       const articlesSnapshot = await getDocs(articleQuery);
       const articleList: Article[] = [];
-      let lastVisibleDoc: DocumentSnapshot | null = null;
+      const lastVisibleDoc: DocumentSnapshot | null =
+        articlesSnapshot.docs[articlesSnapshot.docs.length - 1];
       articlesSnapshot.forEach(doc => {
         const article = doc.data();
         articleList.push({
@@ -74,7 +76,6 @@ export class DashboardService {
           created_at: article['created_at'].toDate(),
           author: article['author'],
         });
-        lastVisibleDoc = doc;
         if (article['author']) {
           this.authors.add(article['author']);
         }
@@ -89,11 +90,7 @@ export class DashboardService {
     }
   }
 
-  async getArticlesCount(filter: {
-    author: string;
-    tag: string;
-    created_at: Date | null;
-  }) {
+  async getArticlesCount(filter: Filter) {
     try {
       const articlesCollection = collection(this.firestore, 'articles');
       let articleQuery = query(articlesCollection);
@@ -108,14 +105,16 @@ export class DashboardService {
         articleQuery = query(articleQuery, where('tag', '==', filter.tag));
       }
       if (filter.created_at) {
-        const selectedDate = new Date(filter.created_at);
-        selectedDate.setUTCHours(0, 0, 0, 0);
-        const nextDay = new Date(selectedDate);
-        nextDay.setUTCDate(selectedDate.getUTCDate() + 1);
+        const selectedDate = new Date();
+        selectedDate.setDate(filter.created_at.getDate());
+        selectedDate.setHours(0, 0, 0, 0);
+        const nextDay = new Date();
+        nextDay.setDate(selectedDate.getDate() + 1);
+        nextDay.setHours(0, 0, 0, 0);
         articleQuery = query(
           articleQuery,
-          where('created_at', '>=', selectedDate.getTime()),
-          where('created_at', '<', nextDay.getTime())
+          where('created_at', '>=', selectedDate),
+          where('created_at', '<', nextDay)
         );
       }
 
@@ -136,7 +135,6 @@ export class DashboardService {
     try {
       const articlesCollection = collection(this.firestore, 'articles');
       await addDoc(articlesCollection, article);
-      console.log('Article added successfully!');
     } catch (error) {
       console.error('Error adding article:', error);
     }

@@ -117,7 +117,6 @@ export class CreateArticleComponent implements OnInit {
             return;
           }
 
-          console.log(article);
           this.articleForm.patchValue({
             title: article.title,
             desc: article.desc,
@@ -140,10 +139,8 @@ export class CreateArticleComponent implements OnInit {
     try {
       if (this.editMode && this.articleID) {
         await this.articleServices.updateArticle(this.articleID, article);
-        console.log('Updated article:', article);
       } else {
         await this.articleServices.addArticle(article);
-        console.log('Saved new article:', article);
       }
     } catch (error) {
       console.error('Error saving article:', error);
