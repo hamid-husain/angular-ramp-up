@@ -1,56 +1,65 @@
-<div class="form-container mat-elevation-z5">
+<div class="form-container margin-top mat-elevation-z5">
   <h1>Signup</h1>
   <form [formGroup]="signupForm" (ngSubmit)="submit()">
     <mat-form-field>
-      <input matInput placeholder="Username" formControlName="username" />
-      <mat-error *ngIf="username?.errors?.['required']">
-        Username is required
-      </mat-error>
+      <input matInput placeholder="Username*" formControlName="username" />
+      <mat-error *ngIf="username?.hasError('required')"
+        >Username is required</mat-error
+      >
+      <mat-error *ngIf="username?.hasError('minlength')"
+        >Username should be at least 3 characters</mat-error
+      >
+      <mat-error *ngIf="username?.hasError('maxlength')"
+        >Username should be at most 12 characters</mat-error
+      >
     </mat-form-field>
     <mat-form-field>
-      <input matInput placeholder="Email" formControlName="email" />
-      <mat-error *ngIf="email?.errors?.['required']">
-        Email is required
-      </mat-error>
-      <mat-error *ngIf="email?.errors?.['email']">
-        Enter a valid email
-      </mat-error>
+      <input matInput placeholder="Email*" formControlName="email" />
+      <mat-error *ngIf="email?.hasError('required')"
+        >Email is required</mat-error
+      >
+      <mat-error *ngIf="email?.hasError('email')"
+        >Enter a valid email</mat-error
+      >
+      <mat-error *ngIf="email?.hasError('maxlength')"
+        >Maximum length: 254</mat-error
+      >
     </mat-form-field>
     <mat-form-field>
       <input
         matInput
-        placeholder="Password"
+        placeholder="Password*"
         type="password"
         formControlName="password" />
-      <mat-error *ngIf="password?.errors?.['required']">
-        Password is required
-      </mat-error>
-      <mat-error *ngIf="password?.hasError('passwordStrength')">
-        Password must be at least 8 characters long, and contain at least 2
-        numeric and 2 special characters.
-      </mat-error>
+      <mat-error *ngIf="password?.hasError('required')"
+        >Password is required</mat-error
+      >
+      <mat-error *ngIf="password?.hasError('minlength')"
+        >Password should be atleast 8 characters long</mat-error
+      >
+      <mat-error *ngIf="password?.hasError('maxlength')"
+        >Password should be atmost 20 characters long</mat-error
+      >
     </mat-form-field>
     <mat-form-field>
       <input
         matInput
-        placeholder="Confirm Password"
+        placeholder="Confirm Password*"
         type="password"
         formControlName="cPassword" />
-      <mat-error *ngIf="cPassword?.errors?.['required']">
-        Confirm password is required
-      </mat-error>
-      <mat-error *ngIf="signupForm?.errors?.['PasswordDoesntMatch']">
+      <mat-error *ngIf="cPassword?.hasError('required')"
+        >Confirm Password is required</mat-error
+      >
+      <mat-error *ngIf="password?.value !== cPassword?.value">
         Passwords should match
       </mat-error>
     </mat-form-field>
     <div class="center margin-top">
-      <button mat-raised-button color="primary" [disabled]="!signupForm.valid">
-        Signup
-      </button>
+      <button mat-raised-button color="primary">Signup</button>
     </div>
     <span class="center margin-top">
       Already have an account?
-      <a routerLink="/login">Login!</a>
+      <a routerLink="/auth/login">Login!</a>
     </span>
   </form>
 </div>

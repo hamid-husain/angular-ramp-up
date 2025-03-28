@@ -1,0 +1,8 @@
+<div class="container">
+  <app-navbar />
+  <div class="container__content" *ngIf="isRootRoute">
+    <img src="images/home.png" alt="home.png" />
+    <button mat-button>Go to Dashboard</button>
+  </div>
+  <router-outlet />
+</div>

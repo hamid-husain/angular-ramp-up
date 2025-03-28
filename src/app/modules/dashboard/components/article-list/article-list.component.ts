@@ -1,34 +1,26 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DashboardService } from '@dashboardServices/dashboard.service'
-import { ArticleFilterComponent } from '@dashboardComponents/article-filter/article-filter.component';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { RouterLink } from '@angular/router';
+import { Article } from '@app/core/models/article.model';
+import { Filter } from '@app/core/models/filter.model';
+import { ArticleCardComponent } from '@modules/dashboard/components/article-card/article-card.component';
+import { ArticleFilterComponent } from '@modules/dashboard/components/article-filter/article-filter.component';
+import { DashboardService } from '@modules/dashboard/services/dashboard.service';
 import { DocumentSnapshot } from 'firebase/firestore';
-
-interface Article {
-  title: string;
-  desc: string;
-  author: string;
-  created_at: Date;
-}
-
-interface Filter {
-  author: string;
-  created_at: Date | null;
-  tag: string;
-}
 
 @Component({
   selector: 'app-article-list',
@@ -51,54 +43,91 @@ interface Filter {
     MatDialogModule,
     FormsModule,
     MatPaginatorModule,
-],
+    RouterLink,
+    ArticleCardComponent,
+    MatBadgeModule,
+  ],
   templateUrl: './article-list.component.html',
-  styleUrl: './article-list.component.scss'
+  styleUrl: './article-list.component.scss',
 })
-
-export class ArticleListComponent {
-  pageSize: number = 10;
-  pageIndex: number = 0;
-  totalArticles: number = 10
-  lastVisible: DocumentSnapshot | null = null
-  paginatedArticles: any[] = [];
+export class ArticleListComponent implements OnInit {
+  pageSize = 10;
+  pageIndex = 0;
+  totalArticles = 10;
+  lastVisible: DocumentSnapshot | null = null;
+  firstVisible: DocumentSnapshot | null = null;
+  paginatedArticles: Article[] = [];
 
   articles: Article[] = [];
   filter: Filter = {
     author: '',
     created_at: null,
-    tag: ''
+    tags: [],
   };
 
-  constructor(private dashboardService:DashboardService, private dialog: MatDialog, private activatedRoute: ActivatedRoute, private router:Router){ }
+  constructor(
+    private dashboardService: DashboardService,
+    private dialog: MatDialog,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {}
 
-  ngOnInit(){
-    this.activatedRoute.queryParams.subscribe((params) => {
+  ngOnInit() {
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.filter.author = params['author'] || '';
+      this.filter.tags = params['tags'] ? params['tags'].split(',') : [];
+      this.filter.created_at = params['created_at']
+        ? new Date(params['created_at'])
+        : null;
       this.pageIndex = params['pageIndex'] ? +params['pageIndex'] : 0;
-      this.getArticles();
       this.getArticlesCount();
+      this.getArticles(this.lastVisible, this.firstVisible);
+      console.log(params['tags']);
     });
   }
 
-  async getArticles(): Promise<void> {
+  async getArticles(
+    lastVisible: DocumentSnapshot | null,
+    firstVisible: DocumentSnapshot | null
+  ): Promise<void> {
     try {
-      console.log(this.filter)
-      const {articleList, lastVisibleDoc} = await this.dashboardService.fetchArticles(this.filter, this.pageSize, this.lastVisible)
-      this.articles = articleList;
+      const { articleList, lastVisibleDoc, firstVisibleDoc } =
+        await this.dashboardService.fetchArticles(
+          this.filter,
+          this.pageSize,
+          lastVisible,
+          firstVisible
+        );
+      this.articles = articleList!;
       this.lastVisible = lastVisibleDoc;
-      this.articles.forEach(article=>{
-        article.title = this.truncateContent(article.title,20)
-        article.author = this.truncateContent(article.author,12)
-        article.desc= this.truncateContent(article.desc, 100)
-      })
-      console.log('Fetched articles:', this.articles);
+      this.firstVisible = firstVisibleDoc!;
+      this.articles?.forEach(article => {
+        article.title = this.truncateContent(article.title, 20);
+        article.author = this.truncateContent(article.author, 12);
+        article.desc = this.truncateContent(article.desc, 100);
+      });
     } catch (error) {
       console.error('Error fetching articles:', error);
     }
   }
 
-  async getArticlesCount(){
-    this.totalArticles = await this.dashboardService.getArticlesCount(this.filter);
+  async getArticlesCount() {
+    this.totalArticles = await this.dashboardService.getArticlesCount(
+      this.filter
+    );
+  }
+
+  async saveArticle(article: {
+    title: string;
+    desc: string;
+    author: string;
+    created_at: Date;
+  }): Promise<void> {
+    try {
+      await this.dashboardService.addArticle(article);
+    } catch (error) {
+      console.error('Error fetching articles:', error);
+    }
   }
 
   truncateContent(content: string, maxLength: number): string {
@@ -114,22 +143,62 @@ export class ArticleListComponent {
   openFilterModal(): void {
     const dialogRef = this.dialog.open(ArticleFilterComponent, {
       width: '400px',
-      data: this.filter
+      data: this.filter,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.filter = result;
-        this.lastVisible=null;
-        this.getArticlesCount();
-        this.getArticles();
-      }
+    dialogRef.afterClosed().subscribe(() => {
+      this.lastVisible = null;
+      this.firstVisible = null;
+      this.getArticlesCount();
+      this.getArticles(this.lastVisible, this.firstVisible);
     });
   }
 
-  onPageChange(event: any): void {
+  onPageChange(event: PageEvent): void {
+    const previousPageIndex = this.pageIndex;
     this.pageIndex = event.pageIndex;
+    if (this.pageIndex > previousPageIndex) {
+      this.getArticles(this.lastVisible, null);
+    } else if (this.pageIndex < previousPageIndex) {
+      this.getArticles(null, this.firstVisible);
+    }
     this.pageSize = event.pageSize;
-    this.getArticles();
+  }
+
+  isFilterApplied(): boolean {
+    return (
+      this.filter.author.length > 0 ||
+      this.filter.created_at != null ||
+      this.filter.tags.length > 0
+    );
+  }
+
+  clearFilter(): void {
+    this.filter = {
+      author: '',
+      created_at: null,
+      tags: [''],
+    };
+    this.router.navigate([], {
+      queryParams: {
+        author: null,
+        tags: null,
+        created_at: null,
+        pageIndex: null,
+      },
+      queryParamsHandling: 'merge',
+    });
+    this.lastVisible = null;
+    this.firstVisible = null;
+    this.getArticles(this.lastVisible, this.firstVisible);
+    this.getArticlesCount();
+  }
+
+  get filterBadge() {
+    let count = 0;
+    if (this.filter.author.length > 0) count++;
+    if (this.filter.created_at != null) count++;
+    if (this.filter.tags.length > 0) count++;
+    return count;
   }
 }

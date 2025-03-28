@@ -1,0 +1,34 @@
+.article-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.tags {
+  display: flex;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  max-width: 60%;
+  max-height: 40px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.tag {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+
+.card-action {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+}

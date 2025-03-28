@@ -20,14 +20,9 @@
     "module": "ES2022",
     "paths": {
       "@app/*": ["app/*"],
-      "@authServices/*": ["app/modules/auth/services/*"],
-      "@authComponents/*": ["app/modules/auth/components/*"],
-      "@dashboardServices/*": ["app/modules/dashboard/services/*"],
-      "@dashboardComponents/*": ["app/modules/dashboard/components/*"],
-      "@articleServices/*": ["app/modules/articles/services/*"],
-      "@articleComponents/*": ["app/modules/articles/components/*"],
+      "@modules/*": ["app/modules/*"],
       "@shared/*": ["app/shared/*"],
-      "@guards/*": ["app/core/guards/*"]
+      "@core/*": ["app/core/*"]
     }
   },
   "angularCompilerOptions": {

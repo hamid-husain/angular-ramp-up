@@ -7,12 +7,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
+import { AuthServicesService } from '@modules/auth/services/auth-services.service';
 import { HotToastService } from '@ngneat/hot-toast';
 
-import { AuthServicesService } from '../../modules/auth/services/auth-services.service';
-
 @Component({
-  selector: 'app-toolbar',
+  selector: 'app-navbar',
   imports: [
     MatToolbarModule,
     MatIconModule,
@@ -23,15 +22,21 @@ import { AuthServicesService } from '../../modules/auth/services/auth-services.s
     RouterLink,
     CommonModule,
   ],
-  templateUrl: './toolbar.component.html',
-  styleUrl: './toolbar.component.css',
+  templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.scss',
 })
-export class ToolbarComponent {
+export class NavbarComponent {
+  currentRoute = '';
+
   constructor(
     public authService: AuthServicesService,
     private router: Router,
     private toast: HotToastService
-  ) {}
+  ) {
+    this.router.events.subscribe(() => {
+      this.currentRoute = this.router.url;
+    });
+  }
 
   logout() {
     this.authService
@@ -44,7 +49,7 @@ export class ToolbarComponent {
         })
       )
       .subscribe(() => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/auth/login']);
       });
   }
 }

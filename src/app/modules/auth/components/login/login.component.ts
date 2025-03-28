@@ -13,10 +13,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
+import { AuthServicesService } from '@modules/auth/services/auth-services.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { catchError, throwError } from 'rxjs';
-
-import { AuthServicesService } from '../../services/auth-services.service';
 
 @Component({
   selector: 'app-login',
@@ -31,7 +30,7 @@ import { AuthServicesService } from '../../services/auth-services.service';
     RouterLink,
   ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  styleUrl: './login.component.scss',
 })
 export class LoginComponent {
   loginForm = new FormGroup({
@@ -59,8 +58,6 @@ export class LoginComponent {
     }
 
     const { email, password } = this.loginForm.value;
-    console.log(email);
-    console.log(password);
     this.authService
       .login(email!, password!)
       .pipe(
@@ -69,20 +66,19 @@ export class LoginComponent {
           success: 'Logged in successfully',
           error: ({ message }) => `there is an error: ${message}`,
         }),
-        catchError((err, caught) => {
+        catchError(err => {
           this.toast.close();
           if (err.code === 'auth/invalid-credential') {
             this.toast.error('Invalid credentials. Please try again.');
           } else {
             this.toast.error('An error occurred. Please try again later.');
           }
-          console.log('error: ', err);
           return throwError(() => err);
         })
       )
       .subscribe({
         next: () => this.router.navigate(['/dashboard']),
-        error: (err: any) => console.log('Error: ', err),
+        error: err => console.error('Error: ', err),
       });
   }
 }
