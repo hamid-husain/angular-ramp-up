@@ -1,12 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import {
-  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,54 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
+import { AuthServicesService } from '@modules/auth/services/auth-services.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { catchError, throwError } from 'rxjs';
-
-import { AuthServicesService } from '../../services/auth-services.service';
-
-export function passwordStrengthValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const password = control.value;
-
-    const lengthValid = password && password.length >= 8;
-    // const hasNumeric = /\d/.test(password);
-    // const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
-    // const numericCount = (password.match(/\d/g) || []).length;
-    // const specialCount = (password.match(/[!@#$%^&*(),.?":{}|<>]/g) || [])
-    //   .length;
-
-    if (
-      lengthValid
-      // &&
-      // hasNumeric &&
-      // hasSpecialChar &&
-      // numericCount >= 2 &&
-      // specialCount >= 2
-    ) {
-      return null;
-    }
-
-    return {
-      passwordStrength: true,
-    };
-  };
-}
-
-export function passwordMatchValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const password = control.get('password')?.value;
-    const cPassword = control.get('cPassword')?.value;
-
-    if (password && cPassword && password !== cPassword) {
-      return {
-        PasswordDoesntMatch: true,
-      };
-    }
-
-    return null;
-  };
-}
 
 @Component({
   selector: 'app-sign-up',
@@ -80,27 +32,24 @@ export function passwordMatchValidator(): ValidatorFn {
   styleUrl: './sign-up.component.scss',
 })
 export class SignUpComponent {
-  signupForm = new FormGroup(
-    {
-      username: new FormControl('', [
-        Validators.minLength(3),
-        Validators.required,
-        Validators.maxLength(12),
-      ]),
-      email: new FormControl('', [
-        Validators.required,
-        Validators.email,
-        Validators.maxLength(254),
-      ]),
-      password: new FormControl('', [
-        Validators.required,
-        passwordStrengthValidator(),
-        Validators.maxLength(20),
-      ]),
-      cPassword: new FormControl('', [Validators.required]),
-    },
-    { validators: passwordMatchValidator() }
-  );
+  signupForm = new FormGroup({
+    username: new FormControl('', [
+      Validators.minLength(3),
+      Validators.required,
+      Validators.maxLength(12),
+    ]),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.email,
+      Validators.maxLength(254),
+    ]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.maxLength(20),
+    ]),
+    cPassword: new FormControl('', [Validators.required]),
+  });
 
   constructor(
     private authService: AuthServicesService,
@@ -121,45 +70,11 @@ export class SignUpComponent {
     return this.signupForm.get('cPassword');
   }
 
-  getErrorMessages(control: AbstractControl | null): string[] {
-    if (!control || !control.errors) return [];
-
-    const errorMessages: string[] = [];
-    const errors = control.errors;
-
-    if (errors['required']) {
-      errorMessages.push('This field is required');
-    }
-    if (errors['minLength']) {
-      errorMessages.push(
-        `Minimum length: ${errors['minLength'].requiredLength}`
-      );
-    }
-    if (errors['maxLength']) {
-      errorMessages.push(
-        `Maximum length: ${errors['maxLength'].requiredLength}`
-      );
-    }
-    if (errors['email']) {
-      errorMessages.push('Enter a valid email');
-    }
-    if (errors['passwordStrength']) {
-      errorMessages.push(
-        'Password must be at least 8 characters long, and contain at least 2 numeric and 2 special characters'
-      );
-    }
-    if (errors['PasswordDoesntMatch']) {
-      errorMessages.push('Passwords should match');
-    }
-
-    return errorMessages;
-  }
-
   submit() {
     if (!this.signupForm.valid) {
       const usernameLength = this.username?.value?.length || 0;
       if (usernameLength < 3) {
-        this.toast.error('Username should be at least 3 characters');
+        this.toast.error('Username should be at least 3 characters long');
       }
 
       if (this.password?.value !== this.cPassword?.value) {

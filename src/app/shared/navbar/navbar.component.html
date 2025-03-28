@@ -1,35 +1,37 @@
-<mat-toolbar class="navbar" color="primary">
-  <a routerLink="/" class="navbar__brand">Mini-Social-Network</a>
+<header>
+  <mat-toolbar class="navbar" color="primary">
+    <a routerLink="/" class="navbar__brand">Mini-Social-Network</a>
 
-  <ng-container
-    *ngIf="authService.currentUser$ | async as user; else loginButton">
-    <div class="navbar__button">
-      <button
-        mat-button
-        *ngIf="currentRoute !== '/dashboard'"
-        routerLink="/dashboard">
-        <mat-icon>dashboard</mat-icon>
-        Dashboard
-      </button>
-      <button mat-button (click)="logout()">
-        <mat-icon>logout</mat-icon>
-        Logout
-      </button>
-    </div>
-  </ng-container>
+    <ng-container
+      *ngIf="authService.currentUser$ | async as user; else loginButton">
+      <div class="navbar__button">
+        <button
+          mat-button
+          *ngIf="currentRoute !== '/dashboard'"
+          routerLink="/dashboard">
+          <mat-icon>dashboard</mat-icon>
+          Dashboard
+        </button>
+        <button mat-button (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Logout
+        </button>
+      </div>
+    </ng-container>
 
-  <ng-template #loginButton>
-    <div class="navbar__button">
-      <button
-        mat-button
-        [routerLink]="
-          currentRoute === '/auth/login' ? '/auth/signup' : '/auth/login'
-        ">
-        <mat-icon>{{
-          currentRoute === '/auth/login' ? 'app_registration' : 'login'
-        }}</mat-icon>
-        {{ currentRoute === '/auth/login' ? 'Sign Up' : 'Login' }}
-      </button>
-    </div>
-  </ng-template>
-</mat-toolbar>
+    <ng-template #loginButton>
+      <div class="navbar__button">
+        <button
+          mat-button
+          [routerLink]="
+            currentRoute === '/auth/login' ? '/auth/signup' : '/auth/login'
+          ">
+          <mat-icon>{{
+            currentRoute === '/auth/login' ? 'app_registration' : 'login'
+          }}</mat-icon>
+          {{ currentRoute === '/auth/login' ? 'Sign Up' : 'Login' }}
+        </button>
+      </div>
+    </ng-template>
+  </mat-toolbar>
+</header>

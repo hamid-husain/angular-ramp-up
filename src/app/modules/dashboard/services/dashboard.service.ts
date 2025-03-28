@@ -5,9 +5,11 @@ import {
   addDoc,
   collection,
   DocumentSnapshot,
+  endBefore,
   getDocs,
   getFirestore,
   limit,
+  limitToLast,
   orderBy,
   query,
   startAfter,
@@ -26,7 +28,8 @@ export class DashboardService {
   async fetchArticles(
     filter: Filter,
     pageSize: number,
-    lastVisible: DocumentSnapshot | null
+    lastVisible: DocumentSnapshot | null,
+    firstVisible: DocumentSnapshot | null
   ) {
     try {
       const articlesCollection = collection(this.firestore, 'articles');
@@ -42,9 +45,7 @@ export class DashboardService {
           where('author', '==', filter.author)
         );
       }
-      if (filter.tag) {
-        articleQuery = query(articleQuery, where('tag', '==', filter.tag));
-      }
+
       if (filter.created_at) {
         const selectedDate = new Date();
         selectedDate.setDate(filter.created_at.getDate());
@@ -59,13 +60,23 @@ export class DashboardService {
         );
       }
 
-      if (lastVisible) {
+      if (lastVisible != null) {
         articleQuery = query(articleQuery, startAfter(lastVisible));
       }
+
+      if (firstVisible != null) {
+        articleQuery = query(
+          articleQuery,
+          endBefore(firstVisible),
+          limitToLast(pageSize)
+        );
+      }
+
       const articlesSnapshot = await getDocs(articleQuery);
       const articleList: Article[] = [];
       const lastVisibleDoc: DocumentSnapshot | null =
-        articlesSnapshot.docs[articlesSnapshot.docs.length - 1];
+        articlesSnapshot.docs[articlesSnapshot.size - 1];
+      const firstVisibleDoc = articlesSnapshot.docs[0];
       articlesSnapshot.forEach(doc => {
         const article = doc.data();
         articleList.push({
@@ -75,18 +86,20 @@ export class DashboardService {
           tags: article['tags'],
           created_at: article['created_at'].toDate(),
           author: article['author'],
+          email: article['email'],
         });
-        if (article['author']) {
-          this.authors.add(article['author']);
-        }
-        if (article['tag']) {
-          this.tags.add(article['tag']);
-        }
       });
-      return { articleList, lastVisibleDoc };
+
+      const filteredArticles: Article[] = articleList.filter(article => {
+        return filter.tags.every(
+          tag => article.tags && article.tags.includes(tag)
+        );
+      });
+
+      return { articleList: filteredArticles, lastVisibleDoc, firstVisibleDoc };
     } catch (error) {
       console.error('Error fetching articles:', error);
-      return { articleList: [], lastVisibleDoc: null };
+      return { articleList: [], lastVisibleDoc: null, firstVisibleDoc: null };
     }
   }
 
@@ -101,9 +114,7 @@ export class DashboardService {
           where('author', '==', filter.author)
         );
       }
-      if (filter.tag) {
-        articleQuery = query(articleQuery, where('tag', '==', filter.tag));
-      }
+
       if (filter.created_at) {
         const selectedDate = new Date();
         selectedDate.setDate(filter.created_at.getDate());
@@ -118,8 +129,29 @@ export class DashboardService {
         );
       }
 
+      let count = 0;
       const articlesSnapshot = await getDocs(articleQuery);
-      return articlesSnapshot.size;
+      articlesSnapshot.forEach(doc => {
+        const article = doc.data();
+        if (
+          filter.tags.every(
+            tag => article['tags'] && article['tags'].includes(tag)
+          )
+        ) {
+          count++;
+        }
+
+        if (article['author']) {
+          this.authors.add(article['author']);
+        }
+        if (article['tags']) {
+          article['tags'].forEach((tag: string) => {
+            this.tags.add(tag);
+          });
+        }
+      });
+
+      return count;
     } catch (error) {
       console.error('Error counting articles:', error);
       return 0;

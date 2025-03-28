@@ -63,7 +63,7 @@ export class ArticleDetailComponent implements OnInit {
       if (this.article) {
         this.user$.subscribe(user => {
           if (user) {
-            this.isAuthor = this.article.author === user.displayName;
+            this.isAuthor = this.article.email === user.email;
           }
         });
       }

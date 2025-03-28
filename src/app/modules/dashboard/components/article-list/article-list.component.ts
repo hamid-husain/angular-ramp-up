@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -44,6 +45,7 @@ import { DocumentSnapshot } from 'firebase/firestore';
     MatPaginatorModule,
     RouterLink,
     ArticleCardComponent,
+    MatBadgeModule,
   ],
   templateUrl: './article-list.component.html',
   styleUrl: './article-list.component.scss',
@@ -53,13 +55,14 @@ export class ArticleListComponent implements OnInit {
   pageIndex = 0;
   totalArticles = 10;
   lastVisible: DocumentSnapshot | null = null;
+  firstVisible: DocumentSnapshot | null = null;
   paginatedArticles: Article[] = [];
 
   articles: Article[] = [];
   filter: Filter = {
     author: '',
     created_at: null,
-    tag: '',
+    tags: [],
   };
 
   constructor(
@@ -72,27 +75,33 @@ export class ArticleListComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
       this.filter.author = params['author'] || '';
-      this.filter.tag = params['tag'] || '';
+      this.filter.tags = params['tags'] ? params['tags'].split(',') : [];
       this.filter.created_at = params['created_at']
         ? new Date(params['created_at'])
         : null;
       this.pageIndex = params['pageIndex'] ? +params['pageIndex'] : 0;
-      this.getArticles();
       this.getArticlesCount();
+      this.getArticles(this.lastVisible, this.firstVisible);
+      console.log(params['tags']);
     });
   }
 
-  async getArticles(): Promise<void> {
+  async getArticles(
+    lastVisible: DocumentSnapshot | null,
+    firstVisible: DocumentSnapshot | null
+  ): Promise<void> {
     try {
-      const { articleList, lastVisibleDoc } =
+      const { articleList, lastVisibleDoc, firstVisibleDoc } =
         await this.dashboardService.fetchArticles(
           this.filter,
           this.pageSize,
-          this.lastVisible
+          lastVisible,
+          firstVisible
         );
-      this.articles = articleList;
+      this.articles = articleList!;
       this.lastVisible = lastVisibleDoc;
-      this.articles.forEach(article => {
+      this.firstVisible = firstVisibleDoc!;
+      this.articles?.forEach(article => {
         article.title = this.truncateContent(article.title, 20);
         article.author = this.truncateContent(article.author, 12);
         article.desc = this.truncateContent(article.desc, 100);
@@ -138,22 +147,29 @@ export class ArticleListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(() => {
+      this.lastVisible = null;
+      this.firstVisible = null;
       this.getArticlesCount();
-      this.getArticles();
+      this.getArticles(this.lastVisible, this.firstVisible);
     });
   }
 
   onPageChange(event: PageEvent): void {
+    const previousPageIndex = this.pageIndex;
     this.pageIndex = event.pageIndex;
+    if (this.pageIndex > previousPageIndex) {
+      this.getArticles(this.lastVisible, null);
+    } else if (this.pageIndex < previousPageIndex) {
+      this.getArticles(null, this.firstVisible);
+    }
     this.pageSize = event.pageSize;
-    this.getArticles();
   }
 
   isFilterApplied(): boolean {
     return (
       this.filter.author.length > 0 ||
       this.filter.created_at != null ||
-      this.filter.tag.length > 0
+      this.filter.tags.length > 0
     );
   }
 
@@ -161,19 +177,28 @@ export class ArticleListComponent implements OnInit {
     this.filter = {
       author: '',
       created_at: null,
-      tag: '',
+      tags: [''],
     };
     this.router.navigate([], {
       queryParams: {
         author: null,
-        tag: null,
+        tags: null,
         created_at: null,
         pageIndex: null,
       },
       queryParamsHandling: 'merge',
     });
     this.lastVisible = null;
-    this.getArticles();
+    this.firstVisible = null;
+    this.getArticles(this.lastVisible, this.firstVisible);
     this.getArticlesCount();
+  }
+
+  get filterBadge() {
+    let count = 0;
+    if (this.filter.author.length > 0) count++;
+    if (this.filter.created_at != null) count++;
+    if (this.filter.tags.length > 0) count++;
+    return count;
   }
 }

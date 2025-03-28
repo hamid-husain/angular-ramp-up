@@ -13,10 +13,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
+import { AuthServicesService } from '@modules/auth/services/auth-services.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { catchError, throwError } from 'rxjs';
-
-import { AuthServicesService } from '../../services/auth-services.service';
 
 @Component({
   selector: 'app-login',

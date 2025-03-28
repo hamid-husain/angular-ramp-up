@@ -55,6 +55,7 @@ function tagsValidator(control: AbstractControl): ValidationErrors | null {
 export class CreateArticleComponent implements OnInit {
   articleForm: FormGroup;
   author = '';
+  email = '';
   created_at: Date = new Date();
   tags: string[] = [];
   editMode = false;
@@ -86,6 +87,7 @@ export class CreateArticleComponent implements OnInit {
     this.user$.subscribe(user => {
       if (user) {
         this.author = user.displayName!;
+        this.email = user.email!;
       }
     });
     this.activatedRoute.paramMap.subscribe(params => {
@@ -157,6 +159,7 @@ export class CreateArticleComponent implements OnInit {
       author: this.author,
       created_at: this.created_at,
       tags: this.tags,
+      email: this.email,
     };
 
     await this.saveArticle(newArticle);

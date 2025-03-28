@@ -49,7 +49,7 @@ export class NavbarComponent {
         })
       )
       .subscribe(() => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/auth/login']);
       });
   }
 }

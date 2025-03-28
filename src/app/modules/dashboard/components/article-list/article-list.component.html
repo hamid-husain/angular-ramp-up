@@ -1,21 +1,24 @@
 <div class="article">
   <div class="article__tools">
-    <button mat-button color="primary" routerLink="/article/create">
-      <mat-icon>add_circle</mat-icon>Create Article
-    </button>
-    <button
-      mat-button
-      color="accent"
-      (click)="openFilterModal()"
-      [ngClass]="{ 'article__tools__filter-applied': isFilterApplied() }">
-      Filter Articles
-    </button>
     <button
       mat-button
       color="warn"
       (click)="clearFilter()"
       *ngIf="isFilterApplied()">
       Clear Filter
+    </button>
+    <button
+      mat-button
+      color="accent"
+      (click)="openFilterModal()"
+      [ngClass]="{ 'article__tools__filter-applied': isFilterApplied() }"
+      matBadge="{{ filterBadge }}"
+      [matBadgeHidden]="!isFilterApplied()"
+      matBadgePosition="before">
+      Filter Articles
+    </button>
+    <button mat-button color="primary" routerLink="/article/create">
+      <mat-icon>add_circle</mat-icon>Create Article
     </button>
   </div>
   <div class="article__list">

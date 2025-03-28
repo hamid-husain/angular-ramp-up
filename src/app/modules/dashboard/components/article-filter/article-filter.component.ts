@@ -45,7 +45,7 @@ export class ArticleFilterComponent {
   filter: Filter = {
     author: '',
     created_at: null,
-    tag: '',
+    tags: [],
   };
 
   constructor(
@@ -62,9 +62,11 @@ export class ArticleFilterComponent {
     this.authors.sort();
     this.tags = [...this.dashboardService.tags];
     this.tags.sort();
+    console.log(this.tags);
   }
 
   applyFilters() {
+    console.log(this.filter);
     this.dialogRef.close();
     let createdAt = this.filter.created_at;
     if (createdAt) {
@@ -74,7 +76,7 @@ export class ArticleFilterComponent {
     this.router.navigate([], {
       queryParams: {
         author: this.filter.author,
-        tag: this.filter.tag,
+        tags: this.filter.tags.join(','),
         created_at: createdAt ? this.formatDateToISO(createdAt) : null,
         pageIndex: 0,
       },

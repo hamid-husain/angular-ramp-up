@@ -23,8 +23,7 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Tag</mat-label>
-    <mat-select [(value)]="filter.tag">
-      <mat-option value="">All</mat-option>
+    <mat-select [(value)]="filter.tags" multiple>
       <mat-option *ngFor="let tag of tags" [value]="tag">{{ tag }}</mat-option>
     </mat-select>
   </mat-form-field>

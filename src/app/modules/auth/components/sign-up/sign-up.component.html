@@ -3,15 +3,27 @@
   <form [formGroup]="signupForm" (ngSubmit)="submit()">
     <mat-form-field>
       <input matInput placeholder="Username*" formControlName="username" />
-      <mat-error *ngFor="let error of getErrorMessages(username)">
-        {{ error }}
-      </mat-error>
+      <mat-error *ngIf="username?.hasError('required')"
+        >Username is required</mat-error
+      >
+      <mat-error *ngIf="username?.hasError('minlength')"
+        >Username should be at least 3 characters</mat-error
+      >
+      <mat-error *ngIf="username?.hasError('maxlength')"
+        >Username should be at most 12 characters</mat-error
+      >
     </mat-form-field>
     <mat-form-field>
       <input matInput placeholder="Email*" formControlName="email" />
-      <mat-error *ngFor="let error of getErrorMessages(email)">
-        {{ error }}
-      </mat-error>
+      <mat-error *ngIf="email?.hasError('required')"
+        >Email is required</mat-error
+      >
+      <mat-error *ngIf="email?.hasError('email')"
+        >Enter a valid email</mat-error
+      >
+      <mat-error *ngIf="email?.hasError('maxlength')"
+        >Maximum length: 254</mat-error
+      >
     </mat-form-field>
     <mat-form-field>
       <input
@@ -19,9 +31,15 @@
         placeholder="Password*"
         type="password"
         formControlName="password" />
-      <mat-error *ngFor="let error of getErrorMessages(password)">
-        {{ error }}
-      </mat-error>
+      <mat-error *ngIf="password?.hasError('required')"
+        >Password is required</mat-error
+      >
+      <mat-error *ngIf="password?.hasError('minlength')"
+        >Password should be atleast 8 characters long</mat-error
+      >
+      <mat-error *ngIf="password?.hasError('maxlength')"
+        >Password should be atmost 20 characters long</mat-error
+      >
     </mat-form-field>
     <mat-form-field>
       <input
@@ -29,8 +47,11 @@
         placeholder="Confirm Password*"
         type="password"
         formControlName="cPassword" />
-      <mat-error *ngFor="let error of getErrorMessages(cPassword)">
-        {{ error }}
+      <mat-error *ngIf="cPassword?.hasError('required')"
+        >Confirm Password is required</mat-error
+      >
+      <mat-error *ngIf="password?.value !== cPassword?.value">
+        Passwords should match
       </mat-error>
     </mat-form-field>
     <div class="center margin-top">
