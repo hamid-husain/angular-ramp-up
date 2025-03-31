@@ -1,14 +1,16 @@
 <header>
   <mat-toolbar class="navbar" color="primary">
-    <a routerLink="/" class="navbar__brand">Mini-Social-Network</a>
+    <a routerLink="{{ RouteRoot }}" class="navbar__brand"
+      >Mini-Social-Network</a
+    >
 
     <ng-container
       *ngIf="authService.currentUser$ | async as user; else loginButton">
       <div class="navbar__button">
         <button
           mat-button
-          *ngIf="currentRoute !== '/dashboard'"
-          routerLink="/dashboard">
+          *ngIf="currentRoute !== RouteDashboard"
+          routerLink="{{ RouteDashboard }}">
           <mat-icon>dashboard</mat-icon>
           Dashboard
         </button>
@@ -23,13 +25,11 @@
       <div class="navbar__button">
         <button
           mat-button
-          [routerLink]="
-            currentRoute === '/auth/login' ? '/auth/signup' : '/auth/login'
-          ">
+          [routerLink]="currentRoute === RouteLogin ? RouteSignup : RouteLogin">
           <mat-icon>{{
-            currentRoute === '/auth/login' ? 'app_registration' : 'login'
+            currentRoute === RouteLogin ? signUpIcon : LoginIcon
           }}</mat-icon>
-          {{ currentRoute === '/auth/login' ? 'Sign Up' : 'Login' }}
+          {{ currentRoute === RouteLogin ? SignUp : Login }}
         </button>
       </div>
     </ng-template>

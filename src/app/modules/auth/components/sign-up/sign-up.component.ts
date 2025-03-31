@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
+import { constants } from '@app/app.constants';
 import { AuthServicesService } from '@modules/auth/services/auth-services.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { catchError, throwError } from 'rxjs';
@@ -32,6 +33,8 @@ import { catchError, throwError } from 'rxjs';
   styleUrl: './sign-up.component.scss',
 })
 export class SignUpComponent {
+  loginRoute = constants.ROUTE_LOGIN;
+
   signupForm = new FormGroup({
     username: new FormControl('', [
       Validators.minLength(3),
@@ -58,27 +61,27 @@ export class SignUpComponent {
   ) {}
 
   get username() {
-    return this.signupForm.get('username');
+    return this.signupForm.get(constants.USERNAME);
   }
   get email() {
-    return this.signupForm.get('email');
+    return this.signupForm.get(constants.EMAIL);
   }
   get password() {
-    return this.signupForm.get('password');
+    return this.signupForm.get(constants.PASSWORD);
   }
   get cPassword() {
-    return this.signupForm.get('cPassword');
+    return this.signupForm.get(constants.CPASSWORD);
   }
 
   submit() {
     if (!this.signupForm.valid) {
       const usernameLength = this.username?.value?.length || 0;
       if (usernameLength < 3) {
-        this.toast.error('Username should be at least 3 characters long');
+        this.toast.error(constants.ERR_USERMAME_MIN);
       }
 
       if (this.password?.value !== this.cPassword?.value) {
-        this.toast.error('Password and Confirm Password should match');
+        this.toast.error(constants.ERR_PASSWORD_CPASSWORD_MATCH);
       }
 
       const password = this.password?.value;
@@ -97,9 +100,7 @@ export class SignUpComponent {
           numericCount < 2 ||
           specialCount < 2
         ) {
-          this.toast.error(
-            'Password must be at least 8 characters long, and contain at least 2 numeric and 2 special characters'
-          );
+          this.toast.error(constants.ERR_PASSWORD_STRENGTH);
         }
       }
 
@@ -112,18 +113,18 @@ export class SignUpComponent {
       .signup(username!, email!, password!)
       .pipe(
         this.toast.observe({
-          loading: 'Signing in....',
-          success: 'Signed up successfully',
+          loading: constants.SIGNUP_LOADING,
+          success: constants.SIGNUP_SUCCESS,
           error: ({ message }) => `there is an error: ${message}`,
         }),
         catchError(err => {
           this.toast.close();
-          this.toast.error('An error occurred. Please try again later.');
+          this.toast.error(constants.ERR_ERROR);
           return throwError(() => err);
         })
       )
       .subscribe({
-        next: () => this.router.navigate(['/dashboard']),
+        next: () => this.router.navigate([constants.ROUTE_DASHBOARD]),
         error: err => console.error('Error: ', err),
       });
   }

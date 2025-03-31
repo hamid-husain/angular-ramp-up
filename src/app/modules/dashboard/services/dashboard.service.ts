@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { constants } from '@app/app.constants';
 import { Article } from '@app/core/models/article.model';
 import { Filter } from '@app/core/models/filter.model';
 import {
@@ -32,17 +33,17 @@ export class DashboardService {
     firstVisible: DocumentSnapshot | null
   ) {
     try {
-      const articlesCollection = collection(this.firestore, 'articles');
+      const articlesCollection = collection(this.firestore, constants.ARTICLES);
       let articleQuery = query(
         articlesCollection,
-        orderBy('created_at'),
+        orderBy(constants.CREATED_AT),
         limit(pageSize)
       );
 
       if (filter.author) {
         articleQuery = query(
           articleQuery,
-          where('author', '==', filter.author)
+          where(constants.AUTHOR, '==', filter.author)
         );
       }
 
@@ -55,8 +56,8 @@ export class DashboardService {
         nextDay.setHours(0, 0, 0, 0);
         articleQuery = query(
           articleQuery,
-          where('created_at', '>=', selectedDate),
-          where('created_at', '<', nextDay)
+          where(constants.CREATED_AT, '>=', selectedDate),
+          where(constants.CREATED_AT, '<', nextDay)
         );
       }
 
@@ -81,12 +82,12 @@ export class DashboardService {
         const article = doc.data();
         articleList.push({
           id: doc.id,
-          title: article['title'],
-          desc: article['desc'],
-          tags: article['tags'],
-          created_at: article['created_at'].toDate(),
-          author: article['author'],
-          email: article['email'],
+          title: article[constants.TITLE],
+          desc: article[constants.DESC],
+          tags: article[constants.TAGS],
+          created_at: article[constants.CREATED_AT].toDate(),
+          author: article[constants.AUTHOR],
+          email: article[constants.EMAIL],
         });
       });
 
@@ -98,20 +99,20 @@ export class DashboardService {
 
       return { articleList: filteredArticles, lastVisibleDoc, firstVisibleDoc };
     } catch (error) {
-      console.error('Error fetching articles:', error);
+      console.error(constants.ERR_FETCHING_ARTICLE, error);
       return { articleList: [], lastVisibleDoc: null, firstVisibleDoc: null };
     }
   }
 
   async getArticlesCount(filter: Filter) {
     try {
-      const articlesCollection = collection(this.firestore, 'articles');
+      const articlesCollection = collection(this.firestore, constants.ARTICLES);
       let articleQuery = query(articlesCollection);
 
       if (filter.author) {
         articleQuery = query(
           articleQuery,
-          where('author', '==', filter.author)
+          where(constants.AUTHOR, '==', filter.author)
         );
       }
 
@@ -124,8 +125,8 @@ export class DashboardService {
         nextDay.setHours(0, 0, 0, 0);
         articleQuery = query(
           articleQuery,
-          where('created_at', '>=', selectedDate),
-          where('created_at', '<', nextDay)
+          where(constants.CREATED_AT, '>=', selectedDate),
+          where(constants.CREATED_AT, '<', nextDay)
         );
       }
 
@@ -135,17 +136,18 @@ export class DashboardService {
         const article = doc.data();
         if (
           filter.tags.every(
-            tag => article['tags'] && article['tags'].includes(tag)
+            tag =>
+              article[constants.TAGS] && article[constants.TAGS].includes(tag)
           )
         ) {
           count++;
         }
 
-        if (article['author']) {
-          this.authors.add(article['author']);
+        if (article[constants.AUTHOR]) {
+          this.authors.add(article[constants.AUTHOR]);
         }
-        if (article['tags']) {
-          article['tags'].forEach((tag: string) => {
+        if (article[constants.TAGS]) {
+          article[constants.TAGS].forEach((tag: string) => {
             this.tags.add(tag);
           });
         }
@@ -153,7 +155,7 @@ export class DashboardService {
 
       return count;
     } catch (error) {
-      console.error('Error counting articles:', error);
+      console.error(constants.ERR_COUNTING_ARTICLE, error);
       return 0;
     }
   }
@@ -165,10 +167,10 @@ export class DashboardService {
     created_at: Date;
   }) {
     try {
-      const articlesCollection = collection(this.firestore, 'articles');
+      const articlesCollection = collection(this.firestore, constants.ARTICLES);
       await addDoc(articlesCollection, article);
     } catch (error) {
-      console.error('Error adding article:', error);
+      console.error(constants.ERR_ADDING_ARTICLE, error);
     }
   }
 }

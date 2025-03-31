@@ -14,6 +14,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
+import { constants } from '@app/app.constants';
 import { ArticlesService } from '@modules/articles/services/articles.service';
 import { AuthServicesService } from '@modules/auth/services/auth-services.service';
 import { firstValueFrom } from 'rxjs';
@@ -53,6 +54,8 @@ function tagsValidator(control: AbstractControl): ValidationErrors | null {
   styleUrl: './create-article.component.scss',
 })
 export class CreateArticleComponent implements OnInit {
+  titleString = constants.TITLE;
+
   articleForm: FormGroup;
   author = '';
   email = '';
@@ -91,7 +94,7 @@ export class CreateArticleComponent implements OnInit {
       }
     });
     this.activatedRoute.paramMap.subscribe(params => {
-      this.articleID = params.get('id');
+      this.articleID = params.get(constants.ID);
       if (this.articleID) {
         this.editMode = true;
         this.loadArticle();
@@ -115,7 +118,7 @@ export class CreateArticleComponent implements OnInit {
         if (article) {
           const user = await firstValueFrom(this.user$);
           if (user?.displayName != article.author) {
-            this.router.navigate(['/dashboard']);
+            this.router.navigate([constants.ROUTE_DASHBOARD]);
             return;
           }
 
@@ -126,7 +129,7 @@ export class CreateArticleComponent implements OnInit {
           });
         }
       } catch (error) {
-        console.error('Error loading article for editing:', error);
+        console.error(constants.ERR_LOADING_FOR_EDITING, error);
       }
     }
   }
@@ -145,7 +148,7 @@ export class CreateArticleComponent implements OnInit {
         await this.articleServices.addArticle(article);
       }
     } catch (error) {
-      console.error('Error saving article:', error);
+      console.error(constants.ERR_SAVING_ARTICLE, error);
     }
   }
 
@@ -163,10 +166,10 @@ export class CreateArticleComponent implements OnInit {
     };
 
     await this.saveArticle(newArticle);
-    this.router.navigate(['/dashboard']);
+    this.router.navigate([constants.ROUTE_DASHBOARD]);
   }
 
   cancel() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate([constants.ROUTE_DASHBOARD]);
   }
 }

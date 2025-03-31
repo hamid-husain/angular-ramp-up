@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { constants } from '@app/app.constants';
 import { Article } from '@app/core/models/article.model';
 import {
   addDoc,
@@ -24,15 +25,15 @@ export class ArticlesService {
     tags: string[];
   }) {
     try {
-      const articlesCollection = collection(this.firestore, 'articles');
+      const articlesCollection = collection(this.firestore, constants.ARTICLES);
       await addDoc(articlesCollection, article);
     } catch (error) {
-      console.error('Error adding article:', error);
+      console.error(constants.ERR_ADDING_ARTICLE, error);
     }
   }
 
   async loadArticleByID(articleID: string) {
-    const docRef = doc(this.firestore, 'articles', articleID);
+    const docRef = doc(this.firestore, constants.ARTICLES, articleID);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -40,10 +41,10 @@ export class ArticlesService {
       return {
         id: docSnap.id,
         ...article,
-        created_at: article['created_at'].toDate(),
+        created_at: article[constants.CREATED_AT].toDate(),
       } as Article;
     } else {
-      throw new Error('Article not found');
+      throw new Error(constants.ERR_ARTICLE_NOT_FOUND);
     }
   }
 
@@ -57,7 +58,7 @@ export class ArticlesService {
       tags: string[];
     }
   ): Promise<void> {
-    const docRef = doc(this.firestore, 'articles', id);
+    const docRef = doc(this.firestore, constants.ARTICLES, id);
     await updateDoc(docRef, {
       title: article.title,
       desc: article.desc,
@@ -68,7 +69,7 @@ export class ArticlesService {
   }
 
   async deleteArticle(id: string): Promise<void> {
-    const docRef = doc(this.firestore, 'articles', id);
+    const docRef = doc(this.firestore, constants.ARTICLES, id);
     await deleteDoc(docRef);
   }
 }

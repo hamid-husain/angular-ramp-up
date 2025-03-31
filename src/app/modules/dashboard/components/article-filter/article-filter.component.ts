@@ -62,11 +62,9 @@ export class ArticleFilterComponent {
     this.authors.sort();
     this.tags = [...this.dashboardService.tags];
     this.tags.sort();
-    console.log(this.tags);
   }
 
   applyFilters() {
-    console.log(this.filter);
     this.dialogRef.close();
     let createdAt = this.filter.created_at;
     if (createdAt) {
@@ -86,6 +84,36 @@ export class ArticleFilterComponent {
 
   closeDialog() {
     this.dialogRef.close();
+  }
+
+  resetDate() {
+    this.filter.created_at = null;
+  }
+
+  isFilterApplied(): boolean {
+    return (
+      this.filter.author.length > 0 ||
+      this.filter.created_at != null ||
+      this.filter.tags.length > 0
+    );
+  }
+
+  clearFilter(): void {
+    this.closeDialog();
+    this.filter = {
+      author: '',
+      created_at: null,
+      tags: [''],
+    };
+    this.router.navigate([], {
+      queryParams: {
+        author: null,
+        tags: null,
+        created_at: null,
+        pageIndex: null,
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 
   formatDateToISO(date: Date): string {

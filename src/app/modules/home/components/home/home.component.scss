@@ -2,22 +2,21 @@
   margin-top: 2px;
   margin-left: 2px;
 
-  &__content{
+  &__content {
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    
-    img{
+
+    img {
       height: 32rem;
       width: 32rem;
     }
 
-    button{
+    button {
       height: 4rem;
       font-size: 1.2rem;
-      
     }
   }
 }

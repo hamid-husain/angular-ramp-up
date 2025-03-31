@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { constants } from '@app/app.constants';
 import { Article } from '@app/core/models/article.model';
 import { Filter } from '@app/core/models/filter.model';
 import { ArticleCardComponent } from '@modules/dashboard/components/article-card/article-card.component';
@@ -74,15 +75,18 @@ export class ArticleListComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
-      this.filter.author = params['author'] || '';
-      this.filter.tags = params['tags'] ? params['tags'].split(',') : [];
-      this.filter.created_at = params['created_at']
-        ? new Date(params['created_at'])
+      this.filter.author = params[constants.AUTHOR] || '';
+      this.filter.tags = params[constants.TAGS]
+        ? params[constants.TAGS].split(',')
+        : [];
+      this.filter.created_at = params[constants.CREATED_AT]
+        ? new Date(params[constants.CREATED_AT])
         : null;
-      this.pageIndex = params['pageIndex'] ? +params['pageIndex'] : 0;
+      this.pageIndex = params[constants.PAGE_INDEX]
+        ? +params[constants.PAGE_INDEX]
+        : 0;
       this.getArticlesCount();
       this.getArticles(this.lastVisible, this.firstVisible);
-      console.log(params['tags']);
     });
   }
 
@@ -107,7 +111,7 @@ export class ArticleListComponent implements OnInit {
         article.desc = this.truncateContent(article.desc, 100);
       });
     } catch (error) {
-      console.error('Error fetching articles:', error);
+      console.error(constants.ERR_FETCHING_ARTICLE, error);
     }
   }
 
@@ -126,7 +130,7 @@ export class ArticleListComponent implements OnInit {
     try {
       await this.dashboardService.addArticle(article);
     } catch (error) {
-      console.error('Error fetching articles:', error);
+      console.error(constants.ERR_FETCHING_ARTICLE, error);
     }
   }
 

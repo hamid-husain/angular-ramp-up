@@ -7,6 +7,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
+import { constants } from '@app/app.constants';
 import { Article } from '@app/core/models/article.model';
 import { DeleteConfirmationComponent } from '@modules/articles/components/delete-confirmation/delete-confirmation.component';
 import { ArticlesService } from '@modules/articles/services/articles.service';
@@ -46,7 +47,7 @@ export class ArticleDetailComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(params => {
-      this.articleID = params.get('id');
+      this.articleID = params.get(constants.ID);
       if (this.articleID) {
         this.loadArticle();
       }
@@ -54,7 +55,7 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   backToDashboard() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate([constants.ROUTE_DASHBOARD]);
   }
 
   async loadArticle() {
@@ -68,12 +69,12 @@ export class ArticleDetailComponent implements OnInit {
         });
       }
     } catch (error) {
-      console.error('Error loading article:', error);
+      console.error(constants.ERR_LOADING_ARTICLE, error);
     }
   }
 
   editArticle() {
-    this.router.navigate([`article/${this.articleID}/edit`]);
+    this.router.navigate([`${constants.ROUTE_ARTICLE}/${this.articleID}/edit`]);
   }
 
   openDeleteConfirmationDialog() {
@@ -90,9 +91,9 @@ export class ArticleDetailComponent implements OnInit {
     if (this.articleID) {
       try {
         await this.articleService.deleteArticle(this.articleID);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate([constants.ROUTE_DASHBOARD]);
       } catch (error) {
-        console.error('Error deleting article:', error);
+        console.error(constants.ERR_DELETING_ARTICLE, error);
       }
     }
   }

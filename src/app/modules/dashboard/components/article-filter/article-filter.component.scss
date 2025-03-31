@@ -11,3 +11,17 @@ mat-dialog-actions {
   display: flex;
   justify-content: space-between;
 }
+
+.filter-head {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0 0.5rem;
+  align-items: center;
+}
+
+.filter-date {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

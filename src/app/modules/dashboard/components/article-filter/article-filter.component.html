@@ -1,4 +1,13 @@
-<h2 mat-dialog-title>Filter Articles</h2>
+<div class="filter-head">
+  <h2 mat-dialog-title>Filter Articles</h2>
+  <button
+    mat-button
+    color="warn"
+    (click)="clearFilter()"
+    *ngIf="isFilterApplied()">
+    Clear Filter
+  </button>
+</div>
 <mat-dialog-content>
   <mat-form-field appearance="fill">
     <mat-label>Author</mat-label>
@@ -10,16 +19,19 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Created At</mat-label>
-    <input
-      matInput
-      [(ngModel)]="filter.created_at"
-      [matDatepicker]="picker"
-      placeholder="Select a date" />
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
+  <div class="filter-date">
+    <mat-form-field appearance="fill">
+      <mat-label>Created At</mat-label>
+      <input
+        matInput
+        [(ngModel)]="filter.created_at"
+        [matDatepicker]="picker"
+        placeholder="Select a date" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <button mat-button (click)="resetDate()">Reset</button>
+  </div>
 
   <mat-form-field appearance="fill">
     <mat-label>Tag</mat-label>
@@ -30,7 +42,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-button (click)="closeDialog()">Cancel</button>
+  <button mat-button color="warn" (click)="closeDialog()">Cancel</button>
   <button mat-raised-button color="primary" (click)="applyFilters()">
     Apply Filters
   </button>

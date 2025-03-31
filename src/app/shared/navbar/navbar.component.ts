@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
+import { constants } from '@app/app.constants';
 import { AuthServicesService } from '@modules/auth/services/auth-services.service';
 import { HotToastService } from '@ngneat/hot-toast';
 
@@ -27,6 +28,14 @@ import { HotToastService } from '@ngneat/hot-toast';
 })
 export class NavbarComponent {
   currentRoute = '';
+  RouteDashboard = constants.ROUTE_DASHBOARD;
+  RouteLogin = constants.ROUTE_LOGIN;
+  RouteRoot = constants.ROUTE_ROOT;
+  RouteSignup = constants.ROUTE_SIGNUP;
+  Login = constants.LOGIN;
+  SignUp = constants.SIGNUP;
+  LoginIcon = constants.LOGIN_ICON;
+  signUpIcon = constants.SIGNUP_ICON;
 
   constructor(
     public authService: AuthServicesService,
@@ -43,13 +52,13 @@ export class NavbarComponent {
       .logout()
       .pipe(
         this.toast.observe({
-          loading: 'Logging out....',
-          success: 'Logged out successfully',
+          loading: constants.LOGOUT_LOADING,
+          success: constants.LOGOUT_SUCCESS,
           error: ({ message }) => `there is an error: ${message}`,
         })
       )
       .subscribe(() => {
-        this.router.navigate(['/auth/login']);
+        this.router.navigate([constants.ROUTE_LOGIN]);
       });
   }
 }
