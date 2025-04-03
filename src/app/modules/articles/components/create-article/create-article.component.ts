@@ -14,10 +14,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
-import { constants } from '@app/app.constants';
-import { ArticlesService } from '@modules/articles/services/articles.service';
-import { AuthServicesService } from '@modules/auth/services/auth-services.service';
+
 import { firstValueFrom } from 'rxjs';
+
+import { constants } from '@app/app.constants';
+import { AuthService } from '@app/shared/authServices/auth.service';
+import { ArticlesService } from '@modules/articles/services/articles.service';
 
 function tagsValidator(control: AbstractControl): ValidationErrors | null {
   const tags: string[] = control.value
@@ -66,7 +68,7 @@ export class CreateArticleComponent implements OnInit {
   user$;
 
   constructor(
-    private authService: AuthServicesService,
+    private authService: AuthService,
     private articleServices: ArticlesService,
     private router: Router,
     private activatedRoute: ActivatedRoute
@@ -80,7 +82,7 @@ export class CreateArticleComponent implements OnInit {
       ]),
       desc: new FormControl('', [
         Validators.required,
-        Validators.maxLength(100),
+        // Validators.maxLength(100),
       ]),
       tagInput: new FormControl('', [tagsValidator]),
     });

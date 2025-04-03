@@ -13,10 +13,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
-import { constants } from '@app/app.constants';
-import { AuthServicesService } from '@modules/auth/services/auth-services.service';
+
 import { HotToastService } from '@ngneat/hot-toast';
 import { catchError, throwError } from 'rxjs';
+
+import { constants } from '@app/app.constants';
+import { AuthService } from '@shared/authServices/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -42,7 +44,7 @@ export class LoginComponent {
   });
 
   constructor(
-    private authService: AuthServicesService,
+    private authService: AuthService,
     private router: Router,
     private toast: HotToastService
   ) {}

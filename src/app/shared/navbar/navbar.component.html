@@ -1,6 +1,6 @@
 <header>
   <mat-toolbar class="navbar" color="primary">
-    <a routerLink="{{ RouteRoot }}" class="navbar__brand"
+    <a class="navbar__brand" routerLink="{{ RouteRoot }}"
       >Mini-Social-Network</a
     >
 
@@ -8,8 +8,8 @@
       *ngIf="authService.currentUser$ | async as user; else loginButton">
       <div class="navbar__button">
         <button
-          mat-button
           *ngIf="currentRoute !== RouteDashboard"
+          mat-button
           routerLink="{{ RouteDashboard }}">
           <mat-icon>dashboard</mat-icon>
           Dashboard

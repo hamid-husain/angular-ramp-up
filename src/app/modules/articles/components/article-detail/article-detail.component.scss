@@ -46,14 +46,6 @@
     }
   }
 
-  &__body {
-    font-size: 1rem;
-    color: #333;
-    line-height: 1.6;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-  }
-
   &__actions {
     display: flex;
     justify-content: space-between;
@@ -61,16 +53,7 @@
     &__edit {
       display: flex;
       justify-content: flex-end;
+
     }
-  }
-}
-
-.back-button-container {
-  text-align: center;
-  margin-top: 20px;
-
-  button {
-    margin-top: 10px;
-    font-size: 1rem;
   }
 }

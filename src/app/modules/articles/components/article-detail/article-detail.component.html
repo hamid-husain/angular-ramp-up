@@ -1,21 +1,22 @@
 <mat-card *ngIf="article" class="article">
   <mat-card-actions class="article__actions">
-    <button mat-button (click)="backToDashboard()" color="accent">
+    <button mat-button color="accent" (click)="backToDashboard()">
       <mat-icon>arrow_back</mat-icon> Back to Dashboard
     </button>
     <div class="article__action__edit">
       <button
-        mat-button
-        color="primary"
         *ngIf="isAuthor"
+        mat-button
+        style="margin: 0 1rem"
+        color="primary"
         (click)="editArticle()">
         <mat-icon>edit</mat-icon>
         Edit
       </button>
       <button
-        mat-flat-button
-        color="warn"
         *ngIf="isAuthor"
+        mat-button
+        color="warn"
         (click)="openDeleteConfirmationDialog()">
         <mat-icon>delete</mat-icon>
         Delete

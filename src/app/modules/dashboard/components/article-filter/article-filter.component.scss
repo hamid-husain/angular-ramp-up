@@ -24,4 +24,9 @@ mat-dialog-actions {
   display: flex;
   flex-direction: row;
   align-items: center;
+  
+  button{
+    position: relative;
+    top: -0.5rem
+  }
 }

@@ -7,9 +7,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
-import { constants } from '@app/app.constants';
-import { AuthServicesService } from '@modules/auth/services/auth-services.service';
+
 import { HotToastService } from '@ngneat/hot-toast';
+
+import { constants } from '@app/app.constants';
+import { AuthService } from '@shared/authServices/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -38,12 +40,12 @@ export class NavbarComponent {
   signUpIcon = constants.SIGNUP_ICON;
 
   constructor(
-    public authService: AuthServicesService,
+    public authService: AuthService,
     private router: Router,
     private toast: HotToastService
   ) {
     this.router.events.subscribe(() => {
-      this.currentRoute = this.router.url;
+      this.currentRoute = this.router.url.split('?')[0];
     });
   }
 

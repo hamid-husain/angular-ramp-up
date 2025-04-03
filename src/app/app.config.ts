@@ -7,6 +7,7 @@ import {
   withEventReplay,
 } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
+
 import { provideHotToastConfig } from '@ngneat/hot-toast';
 
 import { routes } from './app.routes';

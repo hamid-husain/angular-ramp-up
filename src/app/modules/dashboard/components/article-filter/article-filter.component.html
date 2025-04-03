@@ -1,22 +1,25 @@
 <div class="filter-head">
   <h2 mat-dialog-title>Filter Articles</h2>
-  <button
-    mat-button
-    color="warn"
-    (click)="clearFilter()"
-    *ngIf="isFilterApplied()">
-    Clear Filter
+  <button mat-button (click)="closeDialog()">
+    <mat-icon style="margin: 0">close</mat-icon>
   </button>
 </div>
 <mat-dialog-content>
   <mat-form-field appearance="fill">
     <mat-label>Author</mat-label>
-    <mat-select [(value)]="filter.author">
-      <mat-option value="">All</mat-option>
-      <mat-option *ngFor="let author of authors" [value]="author">{{
-        author
-      }}</mat-option>
-    </mat-select>
+    <input
+      type="text"
+      matInput
+      placeholder="All"
+      [formControl]="authorInput"
+      [matAutocomplete]="auto" />
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option
+        *ngFor="let author of filteredAuthors | async"
+        [value]="author"
+        >{{ author }}</mat-option
+      >
+    </mat-autocomplete>
   </mat-form-field>
 
   <div class="filter-date">
@@ -24,9 +27,9 @@
       <mat-label>Created At</mat-label>
       <input
         matInput
-        [(ngModel)]="filter.created_at"
+        placeholder="Select a date"
         [matDatepicker]="picker"
-        placeholder="Select a date" />
+        [(ngModel)]="filter.created_at" />
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
@@ -35,15 +38,15 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Tag</mat-label>
-    <mat-select [(value)]="filter.tags" multiple>
+    <mat-select multiple [(value)]="filter.tags">
       <mat-option *ngFor="let tag of tags" [value]="tag">{{ tag }}</mat-option>
     </mat-select>
   </mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-button color="warn" (click)="closeDialog()">Cancel</button>
-  <button mat-raised-button color="primary" (click)="applyFilters()">
+  <button mat-button color="primary" cdkFocusInitial (click)="applyFilters()">
     Apply Filters
   </button>
+  <button mat-button color="warn" (click)="clearFilter()">Clear Filter</button>
 </mat-dialog-actions>

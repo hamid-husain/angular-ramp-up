@@ -10,6 +10,10 @@
     padding: 8px 0;
     margin: 16px;
 
+    button{
+      margin-right: 0.5rem;
+    }
+
     &__filter-applied {
       background-color: #546c85 !important;
       color: white !important;

@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { constants } from '@app/app.constants';
-import { Article } from '@app/core/models/article.model';
-import { Filter } from '@app/core/models/filter.model';
+
 import {
   addDoc,
   collection,
@@ -16,6 +14,10 @@ import {
   startAfter,
   where,
 } from 'firebase/firestore';
+
+import { constants } from '@app/app.constants';
+import { Article } from '@app/core/models/article.model';
+import { Filter } from '@app/core/models/filter.model';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +34,7 @@ export class DashboardService {
     lastVisible: DocumentSnapshot | null,
     firstVisible: DocumentSnapshot | null
   ) {
+    console.log(filter);
     try {
       const articlesCollection = collection(this.firestore, constants.ARTICLES);
       let articleQuery = query(
@@ -48,12 +51,13 @@ export class DashboardService {
       }
 
       if (filter.created_at) {
-        const selectedDate = new Date();
-        selectedDate.setDate(filter.created_at.getDate());
+        const selectedDate = new Date(filter.created_at);
         selectedDate.setHours(0, 0, 0, 0);
-        const nextDay = new Date();
+        const nextDay = new Date(selectedDate);
         nextDay.setDate(selectedDate.getDate() + 1);
         nextDay.setHours(0, 0, 0, 0);
+        console.log(selectedDate);
+        console.log(nextDay);
         articleQuery = query(
           articleQuery,
           where(constants.CREATED_AT, '>=', selectedDate),
@@ -117,10 +121,9 @@ export class DashboardService {
       }
 
       if (filter.created_at) {
-        const selectedDate = new Date();
-        selectedDate.setDate(filter.created_at.getDate());
+        const selectedDate = new Date(filter.created_at);
         selectedDate.setHours(0, 0, 0, 0);
-        const nextDay = new Date();
+        const nextDay = new Date(selectedDate);
         nextDay.setDate(selectedDate.getDate() + 1);
         nextDay.setHours(0, 0, 0, 0);
         articleQuery = query(

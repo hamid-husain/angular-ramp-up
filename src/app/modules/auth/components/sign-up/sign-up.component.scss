@@ -1,4 +1,13 @@
 .form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  h1{
+    letter-spacing: 0.2rem;
+  }
+
   span {
     a {
       margin-left: 0.35rem;
@@ -7,4 +16,12 @@
       color: #1c2ed1;
     }
   }
+
+  mat-form-field{
+    margin-top: 0.5rem;
+  }
+}
+
+.signup-button{
+  margin-top: 1.5rem;
 }

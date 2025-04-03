@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -16,6 +17,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router } from '@angular/router';
+
+import { map, Observable, startWith } from 'rxjs';
+
 import { Filter } from '@app/core/models/filter.model';
 import { DashboardService } from '@modules/dashboard/services/dashboard.service';
 
@@ -34,12 +38,16 @@ import { DashboardService } from '@modules/dashboard/services/dashboard.service'
     MatNativeDateModule,
     MatDialogModule,
     FormsModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './article-filter.component.html',
   styleUrl: './article-filter.component.scss',
 })
 export class ArticleFilterComponent {
+  authorInput = new FormControl<string>('');
   authors: string[];
+  filteredAuthors: Observable<string[]>;
   tags: string[];
 
   filter: Filter = {
@@ -47,6 +55,8 @@ export class ArticleFilterComponent {
     created_at: null,
     tags: [],
   };
+
+  searchText = '';
 
   constructor(
     private dashboardService: DashboardService,
@@ -62,9 +72,28 @@ export class ArticleFilterComponent {
     this.authors.sort();
     this.tags = [...this.dashboardService.tags];
     this.tags.sort();
+
+    this.authorInput.setValue(this.filter.author || '');
+
+    this.filteredAuthors = this.authorInput.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filterAuthors(value!))
+    );
+
+    this.authorInput.valueChanges.subscribe(value => {
+      this.filter.author = value || '';
+    });
+  }
+
+  private filterAuthors(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.authors.filter(author =>
+      author.toLowerCase().includes(filterValue)
+    );
   }
 
   applyFilters() {
+    console.log(this.filter);
     this.dialogRef.close();
     let createdAt = this.filter.created_at;
     if (createdAt) {
@@ -88,14 +117,6 @@ export class ArticleFilterComponent {
 
   resetDate() {
     this.filter.created_at = null;
-  }
-
-  isFilterApplied(): boolean {
-    return (
-      this.filter.author.length > 0 ||
-      this.filter.created_at != null ||
-      this.filter.tags.length > 0
-    );
   }
 
   clearFilter(): void {

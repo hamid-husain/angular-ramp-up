@@ -7,12 +7,14 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
+
+import { Observable } from 'rxjs';
+
 import { constants } from '@app/app.constants';
 import { Article } from '@app/core/models/article.model';
 import { DeleteConfirmationComponent } from '@modules/articles/components/delete-confirmation/delete-confirmation.component';
 import { ArticlesService } from '@modules/articles/services/articles.service';
-import { AuthServicesService } from '@modules/auth/services/auth-services.service';
-import { Observable } from 'rxjs';
+import { AuthService } from '@shared/authServices/auth.service';
 
 @Component({
   selector: 'app-article-detail',
@@ -36,7 +38,7 @@ export class ArticleDetailComponent implements OnInit {
   constructor(
     private router: Router,
     private articleService: ArticlesService,
-    private authService: AuthServicesService,
+    private authService: AuthService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog
   ) {

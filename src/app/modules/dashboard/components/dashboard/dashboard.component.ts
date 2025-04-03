@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthServicesService } from '@modules/auth/services/auth-services.service';
+
 import { ArticleListComponent } from '@modules/dashboard/components/article-list/article-list.component';
+import { AuthService } from '@shared/authServices/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,7 +15,7 @@ export class DashboardComponent {
   user$;
 
   constructor(
-    private authService: AuthServicesService,
+    private authService: AuthService,
     private router: Router
   ) {
     this.user$ = this.authService.currentUser$;

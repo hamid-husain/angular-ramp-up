@@ -1,1 +1,10 @@
-<router-outlet />
+<div class="container">
+  <app-navbar />
+  <div *ngIf="isRootRoute" class="container__content">
+    <img src="images/home.png" alt="home.png" />
+    <button mat-button routerLink="{{ dashboardRoute }}">
+      Go to Dashboard
+    </button>
+  </div>
+  <router-outlet />
+</div>

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { constants } from '@app/app.constants';
-import { Article } from '@app/core/models/article.model';
+
 import {
   addDoc,
   collection,
@@ -10,6 +9,9 @@ import {
   getFirestore,
   updateDoc,
 } from 'firebase/firestore';
+
+import { constants } from '@app/app.constants';
+import { Article } from '@app/core/models/article.model';
 
 @Injectable({
   providedIn: 'root',

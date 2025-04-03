@@ -15,13 +15,15 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
+
+import { DocumentSnapshot } from 'firebase/firestore';
+
 import { constants } from '@app/app.constants';
 import { Article } from '@app/core/models/article.model';
 import { Filter } from '@app/core/models/filter.model';
 import { ArticleCardComponent } from '@modules/dashboard/components/article-card/article-card.component';
 import { ArticleFilterComponent } from '@modules/dashboard/components/article-filter/article-filter.component';
 import { DashboardService } from '@modules/dashboard/services/dashboard.service';
-import { DocumentSnapshot } from 'firebase/firestore';
 
 @Component({
   selector: 'app-article-list',

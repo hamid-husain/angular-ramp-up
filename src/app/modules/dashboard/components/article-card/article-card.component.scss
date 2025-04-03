@@ -7,28 +7,45 @@
   height: 100%;
   width: 100%;
   position: relative;
+
+  &__title{
+    font-weight: 570;
+    font-size: 1.6rem;
+  }
+
+  &__subtitle{
+    font-size: 0.8rem;
+    font-weight: 200;
+  }
+
+  &__desc{
+    font-size: 1rem;
+  }
+
+  &__tags {
+    display: flex;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    max-width: 60%;
+    max-height: 40px;
+    overflow: hidden;
+    white-space: nowrap;
+    
+    &__tag {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+    }
+  }
+  
+  &__card-action {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 
-.tags {
-  display: flex;
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  max-width: 60%;
-  max-height: 40px;
-  overflow: hidden;
-  white-space: nowrap;
-}
 
-.tag {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: inline-block;
-}
 
-.card-action {
-  margin-top: auto;
-  display: flex;
-  justify-content: flex-end;
-}

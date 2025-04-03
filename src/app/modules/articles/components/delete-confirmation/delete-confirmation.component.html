@@ -4,7 +4,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-flat-button color="warn" (click)="onConfirm()">
+  <button mat-flat-button color="warn" cdkFocusInitial (click)="onConfirm()">
     <mat-icon>delete_forever</mat-icon> Delete
   </button>
 </mat-dialog-actions>

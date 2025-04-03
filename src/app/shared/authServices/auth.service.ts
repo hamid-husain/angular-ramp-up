@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Auth, authState } from '@angular/fire/auth';
+
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -10,7 +11,7 @@ import { from, switchMap } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthServicesService {
+export class AuthService {
   currentUser$;
   isAuthenticated = false;
 
