@@ -22,6 +22,7 @@ import { map, Observable, startWith } from 'rxjs';
 
 import { Filter } from '@app/core/models/filter.model';
 import { DashboardService } from '@modules/dashboard/services/dashboard.service';
+import { ButtonComponent } from '@shared/button/button.component';
 
 @Component({
   selector: 'app-article-filter',
@@ -40,6 +41,7 @@ import { DashboardService } from '@modules/dashboard/services/dashboard.service'
     FormsModule,
     MatAutocompleteModule,
     ReactiveFormsModule,
+    ButtonComponent,
   ],
   templateUrl: './article-filter.component.html',
   styleUrl: './article-filter.component.scss',

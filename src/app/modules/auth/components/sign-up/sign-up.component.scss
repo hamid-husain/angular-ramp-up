@@ -1,10 +1,15 @@
+.outer-container {
+  padding-top: 2rem;
+  padding-bottom: 6rem;
+}
+
 .form-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  
-  h1{
+
+  h1 {
     letter-spacing: 0.2rem;
   }
 
@@ -17,11 +22,11 @@
     }
   }
 
-  mat-form-field{
+  mat-form-field {
     margin-top: 0.5rem;
   }
 }
 
-.signup-button{
+.signup-button {
   margin-top: 1.5rem;
 }

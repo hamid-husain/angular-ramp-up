@@ -1,0 +1,24 @@
+<button
+  *ngIf="theme === 'stroked'; else otherTemplate"
+  mat-stroked-button
+  [style]="style"
+  [color]="color"
+  [disabled]="disabled"
+  [type]="type"
+  routerLink="{{ routerLink }}">
+  <mat-icon [style]="iconStyle">{{ icon }}</mat-icon
+  >{{ label }}
+</button>
+
+<ng-template #otherTemplate>
+  <button
+    mat-button
+    [style]="style"
+    [color]="color"
+    [disabled]="disabled"
+    [type]="type"
+    routerLink="{{ routerLink }}">
+    <mat-icon [style]="iconStyle">{{ icon }}</mat-icon
+    >{{ label }}
+  </button>
+</ng-template>

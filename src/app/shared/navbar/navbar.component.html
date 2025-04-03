@@ -7,30 +7,23 @@
     <ng-container
       *ngIf="authService.currentUser$ | async as user; else loginButton">
       <div class="navbar__button">
-        <button
+        <app-button
           *ngIf="currentRoute !== RouteDashboard"
           mat-button
-          routerLink="{{ RouteDashboard }}">
-          <mat-icon>dashboard</mat-icon>
-          Dashboard
-        </button>
-        <button mat-button (click)="logout()">
-          <mat-icon>logout</mat-icon>
-          Logout
-        </button>
+          label="Dashboard"
+          icon="dashboard"
+          color="primary"
+          routerLink="{{ RouteDashboard }}" />
+        <app-button icon="logout" label="Logout" (click)="logout()" />
       </div>
     </ng-container>
 
     <ng-template #loginButton>
       <div class="navbar__button">
-        <button
-          mat-button
-          [routerLink]="currentRoute === RouteLogin ? RouteSignup : RouteLogin">
-          <mat-icon>{{
-            currentRoute === RouteLogin ? signUpIcon : LoginIcon
-          }}</mat-icon>
-          {{ currentRoute === RouteLogin ? SignUp : Login }}
-        </button>
+        <app-button
+          [routerLink]="currentRoute === RouteLogin ? RouteSignup : RouteLogin"
+          [icon]="currentRoute === RouteLogin ? signUpIcon : LoginIcon"
+          [label]="currentRoute === RouteLogin ? SignUp : Login" />
       </div>
     </ng-template>
   </mat-toolbar>

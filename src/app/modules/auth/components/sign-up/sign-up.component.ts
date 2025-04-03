@@ -18,6 +18,7 @@ import { catchError, throwError } from 'rxjs';
 
 import { constants } from '@app/app.constants';
 import { AuthService } from '@shared/authServices/auth.service';
+import { ButtonComponent } from '@shared/button/button.component';
 
 @Component({
   selector: 'app-sign-up',
@@ -30,6 +31,7 @@ import { AuthService } from '@shared/authServices/auth.service';
     MatInputModule,
     ReactiveFormsModule,
     RouterLink,
+    ButtonComponent,
   ],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.scss',

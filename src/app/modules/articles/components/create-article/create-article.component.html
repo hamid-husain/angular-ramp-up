@@ -50,10 +50,17 @@
         </mat-form-field>
 
         <div class="actions">
-          <button mat-button color="primary" type="submit">Save Article</button>
-          <button mat-button color="warn" type="button" (click)="cancel()">
-            Cancel
-          </button>
+          <app-button
+            iconStyle="display:none;"
+            color="primary"
+            type="submit"
+            label="Save Article" />
+          <app-button
+            color="warn"
+            iconStyle="display:none;"
+            type="button"
+            label="Cancel"
+            (click)="cancel()" />
         </div>
       </form>
     </mat-card-content>

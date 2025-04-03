@@ -20,6 +20,7 @@ import { firstValueFrom } from 'rxjs';
 import { constants } from '@app/app.constants';
 import { AuthService } from '@app/shared/authServices/auth.service';
 import { ArticlesService } from '@modules/articles/services/articles.service';
+import { ButtonComponent } from '@shared/button/button.component';
 
 function tagsValidator(control: AbstractControl): ValidationErrors | null {
   const tags: string[] = control.value
@@ -33,10 +34,10 @@ function tagsValidator(control: AbstractControl): ValidationErrors | null {
     return { maxTagsExceeded: true };
   }
 
-  const invalidTag = tags.find(tag => tag.length > 12);
-  if (invalidTag) {
-    return { tagTooLong: true };
-  }
+  // const invalidTag = tags.find(tag => tag.length > 12);
+  // if (invalidTag) {
+  //   return { tagTooLong: true };
+  // }
 
   return null;
 }
@@ -51,6 +52,7 @@ function tagsValidator(control: AbstractControl): ValidationErrors | null {
     MatCardModule,
     CommonModule,
     ReactiveFormsModule,
+    ButtonComponent,
   ],
   templateUrl: './create-article.component.html',
   styleUrl: './create-article.component.scss',

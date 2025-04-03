@@ -12,6 +12,7 @@ import { HotToastService } from '@ngneat/hot-toast';
 
 import { constants } from '@app/app.constants';
 import { AuthService } from '@shared/authServices/auth.service';
+import { ButtonComponent } from '@shared/button/button.component';
 
 @Component({
   selector: 'app-navbar',
@@ -24,6 +25,7 @@ import { AuthService } from '@shared/authServices/auth.service';
     ReactiveFormsModule,
     RouterLink,
     CommonModule,
+    ButtonComponent,
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',

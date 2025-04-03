@@ -24,6 +24,7 @@ import { Filter } from '@app/core/models/filter.model';
 import { ArticleCardComponent } from '@modules/dashboard/components/article-card/article-card.component';
 import { ArticleFilterComponent } from '@modules/dashboard/components/article-filter/article-filter.component';
 import { DashboardService } from '@modules/dashboard/services/dashboard.service';
+import { ButtonComponent } from '@shared/button/button.component';
 
 @Component({
   selector: 'app-article-list',
@@ -49,6 +50,7 @@ import { DashboardService } from '@modules/dashboard/services/dashboard.service'
     RouterLink,
     ArticleCardComponent,
     MatBadgeModule,
+    ButtonComponent,
   ],
   templateUrl: './article-list.component.html',
   styleUrl: './article-list.component.scss',

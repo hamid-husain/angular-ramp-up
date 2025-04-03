@@ -10,9 +10,12 @@
       (click)="openFilterModal()">
       Filter Articles
     </button>
-    <button mat-button color="primary" routerLink="/article/create">
-      <mat-icon style="margin: 0.2rem">add_circle</mat-icon>Create Article
-    </button>
+    <app-button
+      color="primary"
+      routerLink="/article/create"
+      icon="add_circle"
+      iconStyle="margin: 0.2rem"
+      label="Create Article" />
   </div>
   <div class="article__list">
     <app-article-card *ngFor="let article of articles" [article]="article">

@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 import { constants } from '@app/app.constants';
+import { ButtonComponent } from '@shared/button/button.component';
 import { NavbarComponent } from '@shared/navbar/navbar.component';
 
 @Component({
@@ -14,6 +15,7 @@ import { NavbarComponent } from '@shared/navbar/navbar.component';
     RouterLink,
     MatButtonModule,
     CommonModule,
+    ButtonComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

@@ -2,9 +2,7 @@
   <app-navbar />
   <div *ngIf="isRootRoute" class="container__content">
     <img src="images/home.png" alt="home.png" />
-    <button mat-button routerLink="{{ dashboardRoute }}">
-      Go to Dashboard
-    </button>
+    <app-button label=" Go to Dashboard " [routerLink]="dashboardRoute" />
   </div>
   <router-outlet />
 </div>

@@ -2,6 +2,7 @@
   max-width: 90%;
   margin: 20px auto;
   padding: 20px;
+  padding-bottom: 8rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 
   &__header {
@@ -53,7 +54,6 @@
     &__edit {
       display: flex;
       justify-content: flex-end;
-
     }
   }
 }

@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { User } from '@angular/fire/auth';
-import { MatButton } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,15 +14,16 @@ import { Article } from '@app/core/models/article.model';
 import { DeleteConfirmationComponent } from '@modules/articles/components/delete-confirmation/delete-confirmation.component';
 import { ArticlesService } from '@modules/articles/services/articles.service';
 import { AuthService } from '@shared/authServices/auth.service';
+import { ButtonComponent } from '@shared/button/button.component';
 
 @Component({
   selector: 'app-article-detail',
   imports: [
     MatCardModule,
     CommonModule,
-    MatButton,
     MatChipsModule,
     MatIconModule,
+    ButtonComponent,
   ],
   templateUrl: './article-detail.component.html',
   styleUrl: './article-detail.component.scss',

@@ -29,7 +29,7 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
       {
-        path: '**',
+        path: '',
         redirectTo: 'auth/login',
         pathMatch: 'full',
       },
