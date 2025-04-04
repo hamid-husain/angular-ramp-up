@@ -31,6 +31,7 @@
     "firebase": "^11.4.0",
     "ngx-mat-select-search": "^8.0.0",
     "rxjs": "~7.8.0",
+    "sass-migrator": "^2.3.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
@@ -55,6 +56,7 @@
     "eslint-plugin-prettier": "^5.2.5",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-unused-imports": "^4.1.4",
+    "husky": "^9.1.7",
     "jasmine-core": "~5.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
@@ -67,5 +69,10 @@
     "schematics-scss-migrate": "^2.3.17",
     "typescript": "~5.7.2",
     "typescript-eslint": "8.26.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint:eslint:fix && npm run format"
+    }
   }
 }

@@ -1,16 +1,18 @@
+@use '../../../../../styles.scss' as *;
+
 .article {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  margin: 0px 20px;
+  margin: px-to-rem(0) px-to-rem(20);
 
   &__tools {
     display: flex;
     justify-content: flex-end;
-    padding: 8px 0;
-    margin: 16px;
+    padding: px-to-rem(8) 0;
+    margin: px-to-rem(16);
 
-    button{
+    button {
       margin-right: 0.5rem;
     }
 
@@ -23,15 +25,15 @@
   &__list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    gap: px-to-rem(20);
     white-space: pre-wrap;
     word-wrap: break-word;
   }
 }
 
 .footer {
-  margin-top: 20px;
-  padding: 20px;
+  margin-top: px-to-rem(20);
+  padding: px-to-rem(20);
   text-align: center;
   background-color: #f8f8f8;
 }

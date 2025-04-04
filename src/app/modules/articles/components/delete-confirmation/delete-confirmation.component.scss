@@ -1,5 +1,7 @@
+@use '../../../../../styles.scss' as *;
+
 mat-dialog-content {
-  font-size: 16px;
+  font-size: px-to-rem(16);
 }
 
 mat-dialog-actions {

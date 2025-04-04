@@ -1,9 +1,11 @@
+@use '../../../../../styles.scss' as *;
+
 mat-form-field {
   width: 100%;
 }
 
 mat-dialog-content {
-  max-height: 300px;
+  max-height: px-to-rem(300);
   overflow-y: auto;
 }
 
@@ -24,9 +26,9 @@ mat-dialog-actions {
   display: flex;
   flex-direction: row;
   align-items: center;
-  
-  button{
+
+  button {
     position: relative;
-    top: -0.5rem
+    top: -0.5rem;
   }
 }

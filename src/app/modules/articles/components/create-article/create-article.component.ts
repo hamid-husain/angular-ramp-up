@@ -22,6 +22,13 @@ import { AuthService } from '@app/shared/authServices/auth.service';
 import { ArticlesService } from '@modules/articles/services/articles.service';
 import { ButtonComponent } from '@shared/button/button.component';
 
+function descriptionValidator(
+  control: AbstractControl
+): ValidationErrors | null {
+  const words = control.value ? control.value.trim().split(/\s+/) : [];
+  return words.length > 1000 ? { maxWordsExceeded: true } : null;
+}
+
 function tagsValidator(control: AbstractControl): ValidationErrors | null {
   const tags: string[] = control.value
     ? control.value
@@ -30,14 +37,20 @@ function tagsValidator(control: AbstractControl): ValidationErrors | null {
         .filter((tag: string) => tag !== '')
     : [];
 
+  const uniqueTags = new Set(tags);
+
   if (tags.length > 5) {
     return { maxTagsExceeded: true };
   }
 
-  // const invalidTag = tags.find(tag => tag.length > 12);
-  // if (invalidTag) {
-  //   return { tagTooLong: true };
-  // }
+  const invalidTag = tags.find(tag => tag.length > 12);
+  if (invalidTag) {
+    return { tagTooLong: true };
+  }
+
+  if (tags.length !== uniqueTags.size) {
+    return { duplicateTags: true };
+  }
 
   return null;
 }
@@ -80,12 +93,9 @@ export class CreateArticleComponent implements OnInit {
     this.articleForm = new FormGroup({
       title: new FormControl('', [
         Validators.required,
-        Validators.maxLength(40),
+        Validators.maxLength(100),
       ]),
-      desc: new FormControl('', [
-        Validators.required,
-        // Validators.maxLength(100),
-      ]),
+      desc: new FormControl('', [Validators.required, descriptionValidator]),
       tagInput: new FormControl('', [tagsValidator]),
     });
   }

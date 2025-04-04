@@ -1,51 +1,56 @@
+@use '../../../../../styles.scss' as *;
+
 .article-card {
   display: flex;
   flex-direction: column;
   background-color: #f9f9f9;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: px-to-rem(5);
+  box-shadow: 0 px-to-rem(2) px-to-rem(5) rgba(0, 0, 0, 0.1);
   height: 100%;
   width: 100%;
   position: relative;
 
-  &__title{
+  &__title {
     font-weight: 570;
     font-size: 1.6rem;
+    max-width: 20rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
   }
 
-  &__subtitle{
+  &__subtitle {
     font-size: 0.8rem;
     font-weight: 200;
   }
 
-  &__desc{
+  &__desc {
     font-size: 1rem;
   }
 
   &__tags {
     display: flex;
     position: absolute;
-    bottom: 10px;
-    left: 10px;
+    bottom: px-to-rem(10);
+    left: px-to-rem(10);
     max-width: 60%;
-    max-height: 40px;
+    max-height: px-to-rem(40);
     overflow: hidden;
     white-space: nowrap;
-    
+
     &__tag {
+      max-width: 5rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       display: inline-block;
     }
   }
-  
+
   &__card-action {
     margin-top: auto;
     display: flex;
     justify-content: flex-end;
   }
 }
-
-
-

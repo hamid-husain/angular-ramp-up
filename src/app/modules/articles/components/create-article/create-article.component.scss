@@ -1,3 +1,5 @@
+@use '../../../../../styles.scss' as *;
+
 .create-article-container {
   display: flex;
   justify-content: center;
@@ -9,12 +11,12 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 600px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  max-width: px-to-rem(600);
+  padding: px-to-rem(20);
+  box-shadow: 0 px-to-rem(4) px-to-rem(4) rgba(0, 0, 0, 0.1);
+  border-radius: px-to-rem(8);
 
-  mat-card-header{
+  mat-card-header {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,7 +28,7 @@ mat-form-field {
 }
 
 .actions {
-  margin-top: 20px;
+  margin-top: px-to-rem(20);
   display: flex;
   justify-content: space-between;
 }

@@ -1,6 +1,10 @@
 @use '@ngneat/hot-toast/src/styles/styles.scss';
 @use '@angular/material' as mat;
 
+@function px-to-rem($size) {
+  @return calc($size / 16) + rem;
+}
+
 $theme: mat.define-theme();
 html {
   @include mat.all-component-themes($theme);
@@ -18,11 +22,11 @@ body {
 
 .form-container {
   display: block;
-  max-width: 300px;
+  max-width: px-to-rem(300);
   margin: auto;
   background: whitesmoke;
-  padding: 48px;
-  border-radius: 16px;
+  padding: px-to-rem(48);
+  border-radius: px-to-rem(16);
 }
 
 .form-container mat-form-field {
@@ -35,7 +39,7 @@ body {
 }
 
 .margin-top {
-  margin-top: 16px;
+  margin-top: px-to-rem(16);
 }
 
 .text-center {

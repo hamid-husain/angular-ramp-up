@@ -1,14 +1,16 @@
+@use '../../../../../styles.scss' as *;
+
 .article {
   max-width: 90%;
-  margin: 20px auto;
-  padding: 20px;
+  margin: px-to-rem(20) auto;
+  padding: px-to-rem(20);
   padding-bottom: 8rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 
   &__header {
     display: block;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #ddd;
+    padding-bottom: px-to-rem(16);
+    border-bottom: px-to-rem(1) solid #ddd;
     white-space: pre-wrap;
     word-wrap: break-word;
 
@@ -29,19 +31,19 @@
     &__meta {
       font-size: 1rem;
       color: #555;
-      margin-top: 8px;
+      margin-top: px-to-rem(8);
     }
   }
 
   &__content {
-    margin-top: 20px;
+    margin-top: px-to-rem(20);
     color: #333;
 
     &__description {
       font-size: 1.1rem;
       color: #444;
       line-height: 1.5;
-      margin-bottom: 20px;
+      margin-bottom: px-to-rem(20);
       white-space: pre-wrap;
       word-wrap: break-word;
     }

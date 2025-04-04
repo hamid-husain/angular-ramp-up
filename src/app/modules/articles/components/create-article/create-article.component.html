@@ -27,8 +27,9 @@
           <mat-error *ngIf="articleForm.get('desc')?.hasError('required')">
             Description is required
           </mat-error>
-          <mat-error *ngIf="articleForm.get('desc')?.hasError('maxlength')">
-            Description cannot exceed 100 characters
+          <mat-error
+            *ngIf="articleForm.get('desc')?.hasError('maxWordsExceeded')">
+            Description cannot exceed 1000 words
           </mat-error>
         </mat-form-field>
 
@@ -46,6 +47,10 @@
           <mat-error
             *ngIf="articleForm.get('tagInput')?.hasError('tagTooLong')">
             Each tag cannot exceed 12 characters.
+          </mat-error>
+          <mat-error
+            *ngIf="articleForm.get('tagInput')?.hasError('duplicateTags')">
+            Duplicate tags are not allowed.
           </mat-error>
         </mat-form-field>
 
