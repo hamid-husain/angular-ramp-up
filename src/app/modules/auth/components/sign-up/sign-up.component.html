@@ -51,16 +51,16 @@
         <mat-error *ngIf="cPassword?.hasError('required')"
           >Confirm Password is required</mat-error
         >
-        <mat-error *ngIf="password?.value !== cPassword?.value">
-          Passwords should match
+        <mat-error *ngIf="password?.value !== cPassword?.value"
+          >Both Passwords should match
         </mat-error>
       </mat-form-field>
       <div class="center signup-button">
         <app-button
           type="submit"
           theme="stroked"
-          iconStyle="display:none;"
           color="primary"
+          toolTip="Create your account"
           label="Sign Up" />
       </div>
       <span class="center margin-top">

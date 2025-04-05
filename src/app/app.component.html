@@ -2,7 +2,10 @@
   <app-navbar />
   <div *ngIf="isRootRoute" class="container__content">
     <img src="images/home.png" alt="home.png" />
-    <app-button label=" Go to Dashboard " [routerLink]="dashboardRoute" />
+    <app-button
+      toolTip="Go to Dashboard"
+      label=" Go to Dashboard "
+      [routerLink]="dashboardRoute" />
   </div>
   <router-outlet />
 </div>

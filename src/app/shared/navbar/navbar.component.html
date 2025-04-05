@@ -12,9 +12,13 @@
           mat-button
           label="Dashboard"
           icon="dashboard"
-          color="primary"
+          toolTip="Go to Dashboard"
           routerLink="{{ RouteDashboard }}" />
-        <app-button icon="logout" label="Logout" (click)="logout()" />
+        <app-button
+          icon="logout"
+          label="Logout"
+          toolTip="Log out of your account"
+          (click)="logout()" />
       </div>
     </ng-container>
 
@@ -22,6 +26,9 @@
       <div class="navbar__button">
         <app-button
           [routerLink]="currentRoute === RouteLogin ? RouteSignup : RouteLogin"
+          [toolTip]="
+            currentRoute === RouteLogin ? 'Click to sign up' : 'Click to login'
+          "
           [icon]="currentRoute === RouteLogin ? signUpIcon : LoginIcon"
           [label]="currentRoute === RouteLogin ? SignUp : Login" />
       </div>

@@ -18,11 +18,11 @@
     >
   </mat-chip-set>
   <mat-card-actions class="article-card__card-action">
-    <button
+    <app-button
       mat-button
       color="primary"
-      [routerLink]="[articleRoute, article.id]">
-      Read More
-    </button>
+      label="Read More"
+      toolTip="Read the full article"
+      [routerLink]="`${articleRoute}/${article.id}`" />
   </mat-card-actions>
 </mat-card>

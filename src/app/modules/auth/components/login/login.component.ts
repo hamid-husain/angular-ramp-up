@@ -38,7 +38,7 @@ import { ButtonComponent } from '@shared/button/button.component';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  signupRoute = constants.ROUTE_SIGNUP;
+  signupRoute = constants.ROUTES.SIGNUP;
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -84,7 +84,7 @@ export class LoginComponent {
         })
       )
       .subscribe({
-        next: () => this.router.navigate([constants.ROUTE_DASHBOARD]),
+        next: () => this.router.navigate([constants.ROUTES.DASHBOARD]),
         error: err => console.error('Error: ', err),
       });
   }

@@ -1,20 +1,20 @@
 <div class="article">
   <div class="article__tools">
-    <button
+    <app-button
       mat-button
       color="accent"
       matBadgePosition="before"
-      matBadge="{{ filterBadge }}"
-      [ngClass]="{ 'article__tools__filter-applied': isFilterApplied() }"
-      [matBadgeHidden]="!isFilterApplied()"
-      (click)="openFilterModal()">
-      Filter Articles
-    </button>
+      label="Filter Articles"
+      iconStyle="display:none;"
+      [isFilterApplied]="isFilterApplied()"
+      [matBadge]="filterBadge > 0 ? filterBadge : null"
+      (click)="openFilterModal()" />
     <app-button
       color="primary"
       routerLink="/article/create"
       icon="add_circle"
       iconStyle="margin: 0.2rem"
+      toolTip="Create a new article"
       label="Create Article" />
   </div>
   <div class="article__list">

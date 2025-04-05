@@ -32,10 +32,10 @@ import { ButtonComponent } from '@shared/button/button.component';
 })
 export class NavbarComponent {
   currentRoute = '';
-  RouteDashboard = constants.ROUTE_DASHBOARD;
-  RouteLogin = constants.ROUTE_LOGIN;
-  RouteRoot = constants.ROUTE_ROOT;
-  RouteSignup = constants.ROUTE_SIGNUP;
+  RouteDashboard = constants.ROUTES.DASHBOARD;
+  RouteLogin = constants.ROUTES.LOGIN;
+  RouteRoot = constants.ROUTES.ROOT;
+  RouteSignup = constants.ROUTES.SIGNUP;
   Login = constants.LOGIN;
   SignUp = constants.SIGNUP;
   LoginIcon = constants.LOGIN_ICON;
@@ -51,6 +51,9 @@ export class NavbarComponent {
     });
   }
 
+  /**
+   * User logout
+   */
   logout() {
     this.authService
       .logout()
@@ -62,7 +65,7 @@ export class NavbarComponent {
         })
       )
       .subscribe(() => {
-        this.router.navigate([constants.ROUTE_LOGIN]);
+        this.router.navigate([constants.ROUTES.LOGIN]);
       });
   }
 }

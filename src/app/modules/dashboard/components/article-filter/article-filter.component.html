@@ -1,6 +1,6 @@
 <div class="filter-head">
   <h2 mat-dialog-title>Filter Articles</h2>
-  <app-button icon="close" (click)="closeDialog()" />
+  <app-button icon="close" toolTip="cancel and close" (click)="closeDialog()" />
 </div>
 <mat-dialog-content>
   <mat-form-field appearance="fill">
@@ -31,7 +31,7 @@
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
-    <app-button label="Reset" iconStyle="display:none;" (click)="resetDate()" />
+    <app-button label="Reset" toolTip="reset the date" (click)="resetDate()" />
   </div>
 
   <mat-form-field appearance="fill">
@@ -47,11 +47,11 @@
     color="primary"
     label="Apply Filters"
     cdkFocusInitial
-    iconStyle="display:none;"
+    toolTip="Apply filter on articles"
     (click)="applyFilters()" />
   <app-button
     color="warn"
-    iconStyle="display:none;"
     label="Clear Filter"
+    toolTip="clear all filters applied"
     (click)="clearFilter()" />
 </mat-dialog-actions>

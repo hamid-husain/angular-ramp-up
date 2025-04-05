@@ -2,8 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { authGuard } from '@app/core/guards/auth.guard';
-
 const routes: Routes = [
   {
     path: 'create',
@@ -11,7 +9,6 @@ const routes: Routes = [
       import(
         '@modules/articles/components/create-article/create-article.component'
       ).then(m => m.CreateArticleComponent),
-    canActivate: [authGuard],
   },
   {
     path: ':id/edit',
@@ -19,7 +16,6 @@ const routes: Routes = [
       import(
         '@modules/articles/components/create-article/create-article.component'
       ).then(m => m.CreateArticleComponent),
-    canActivate: [authGuard],
   },
   {
     path: ':id',
@@ -27,7 +23,6 @@ const routes: Routes = [
       import(
         '@modules/articles/components/article-detail/article-detail.component'
       ).then(m => m.ArticleDetailComponent),
-    canActivate: [authGuard],
   },
 ];
 

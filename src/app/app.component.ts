@@ -22,18 +22,16 @@ import { NavbarComponent } from '@shared/navbar/navbar.component';
 })
 export class AppComponent implements OnInit {
   isRootRoute = false;
-  dashboardRoute = constants.ROUTE_DASHBOARD;
+  dashboardRoute = constants.ROUTES.DASHBOARD;
   title = 'mini-social-network';
 
   constructor(private router: Router) {
     this.router.events.subscribe(() => {
-      this.isRootRoute = this.router.url === constants.ROUTE_ROOT;
+      this.isRootRoute = this.router.url === constants.ROUTES.ROOT;
     });
   }
 
   ngOnInit(): void {
-    if (this.router.url === constants.ROUTE_ROOT) {
-      this.router.navigate([constants.ROUTE_LOGIN]);
-    }
+    console.log('app initialised', this.router.url);
   }
 }

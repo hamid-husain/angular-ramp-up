@@ -1,9 +1,11 @@
 export const constants = {
-  ROUTE_DASHBOARD: '/dashboard',
-  ROUTE_LOGIN: '/auth/login',
-  ROUTE_SIGNUP: '/auth/signup',
-  ROUTE_ROOT: '/',
-  ROUTE_ARTICLE: '/article',
+  ROUTES: {
+    DASHBOARD: '/dashboard',
+    LOGIN: '/auth/login',
+    SIGNUP: '/auth/signup',
+    ROOT: '/',
+    ARTICLE: '/article',
+  },
 
   PATH_AUTH: 'auth',
 
@@ -41,6 +43,7 @@ export const constants = {
   ERR_FETCHING_ARTICLE: 'Error fetching articles:',
   ERR_ERROR: 'An error occurred. Please try again later.',
   ERR_COUNTING_ARTICLE: 'Error counting articles:',
+  ERR_UNAUTHORIZED: 'Unauthorized access',
 
   ERR_INVALID_CREDENTIALS: 'Invalid credentials. Please try again.',
   ERR_USERMAME_MIN: 'Username should be at least 3 characters long',

@@ -1,13 +1,20 @@
-<h2 mat-dialog-title>Confirm Deletion</h2>
+<div class="dialog-header">
+  <h2 mat-dialog-title>Confirm Deletion</h2>
+  <app-button icon="close" toolTip="Cancel and go back" (click)="onCancel()" />
+</div>
 <mat-dialog-content>
   <p>Are you sure you want to delete this article?</p>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <app-button label="Cancel" (click)="onCancel()" />
+  <app-button
+    label="Cancel"
+    toolTip="Cancel and go back"
+    (click)="onCancel()" />
   <app-button
     color="warn"
     cdkFocusInitial
     icon="delete_forever"
     label="Delete"
+    toolTip="Confirm delete this article"
     (click)="onConfirm()" />
 </mat-dialog-actions>

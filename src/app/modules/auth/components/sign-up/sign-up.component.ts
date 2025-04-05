@@ -37,7 +37,7 @@ import { ButtonComponent } from '@shared/button/button.component';
   styleUrl: './sign-up.component.scss',
 })
 export class SignUpComponent {
-  loginRoute = constants.ROUTE_LOGIN;
+  loginRoute = constants.ROUTES.LOGIN;
 
   signupForm = new FormGroup({
     username: new FormControl('', [
@@ -128,7 +128,7 @@ export class SignUpComponent {
         })
       )
       .subscribe({
-        next: () => this.router.navigate([constants.ROUTE_DASHBOARD]),
+        next: () => this.router.navigate([constants.ROUTES.DASHBOARD]),
         error: err => console.error('Error: ', err),
       });
   }

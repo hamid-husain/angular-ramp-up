@@ -1,4 +1,4 @@
-@use '../../../../../styles.scss' as *;
+@use 'styles/styles.scss' as *;
 
 .create-article-container {
   display: flex;
@@ -17,6 +17,7 @@
   border-radius: px-to-rem(8);
 
   mat-card-header {
+    margin-bottom: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;

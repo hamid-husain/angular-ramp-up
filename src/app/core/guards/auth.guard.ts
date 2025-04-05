@@ -10,11 +10,13 @@ export const authGuard: CanActivateFn = route => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
+  console.log(JSON.stringify(route.url), route.paramMap);
+
   return authService.currentUser$.pipe(
     map(user => {
       if (user) {
-        if (route.routeConfig?.path == constants.PATH_AUTH) {
-          router.navigate([constants.ROUTE_DASHBOARD]);
+        if (route.routeConfig?.path === constants.PATH_AUTH) {
+          router.navigate([constants.ROUTES.DASHBOARD]);
           return false;
         }
         return true;
@@ -22,7 +24,7 @@ export const authGuard: CanActivateFn = route => {
         if (route.routeConfig?.path == constants.PATH_AUTH) {
           return true;
         }
-        router.navigate([constants.ROUTE_LOGIN]);
+        router.navigate([constants.ROUTES.LOGIN]);
         return false;
       }
     })

@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { User } from '@angular/fire/auth';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { User } from 'firebase/auth';
 import { Observable } from 'rxjs';
 
 import { constants } from '@app/app.constants';
@@ -56,10 +56,16 @@ export class ArticleDetailComponent implements OnInit {
     });
   }
 
-  backToDashboard() {
-    this.router.navigate([constants.ROUTE_DASHBOARD]);
+  /**
+   * back to dashboard
+   */
+  backToDashboard(): void {
+    this.router.navigate([constants.ROUTES.DASHBOARD]);
   }
 
+  /**
+   * populate the article
+   */
   async loadArticle() {
     try {
       this.article = await this.articleService.loadArticleByID(this.articleID!);
@@ -75,10 +81,18 @@ export class ArticleDetailComponent implements OnInit {
     }
   }
 
+  /**
+   * redirect to edit route
+   */
   editArticle() {
-    this.router.navigate([`${constants.ROUTE_ARTICLE}/${this.articleID}/edit`]);
+    this.router.navigate([
+      `${constants.ROUTES.ARTICLE}/${this.articleID}/edit`,
+    ]);
   }
 
+  /**
+   * open delete confirmation modal
+   */
   openDeleteConfirmationDialog() {
     const dialogRef = this.dialog.open(DeleteConfirmationComponent);
 
@@ -89,11 +103,14 @@ export class ArticleDetailComponent implements OnInit {
     });
   }
 
+  /**
+   * function to delete article
+   */
   async deleteArticle() {
     if (this.articleID) {
       try {
         await this.articleService.deleteArticle(this.articleID);
-        this.router.navigate([constants.ROUTE_DASHBOARD]);
+        this.router.navigate([constants.ROUTES.DASHBOARD]);
       } catch (error) {
         console.error(constants.ERR_DELETING_ARTICLE, error);
       }

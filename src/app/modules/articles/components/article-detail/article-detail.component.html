@@ -2,16 +2,18 @@
   <mat-card-actions class="article__actions">
     <app-button
       icon="arrow_back"
-      label=" Back to Dashboard"
+      label="Back to Dashboard"
+      toolTip="Go back to dashboard"
       color="accent"
       (click)="backToDashboard()" />
-    <div class="article__action__edit">
+    <div class="article__action__edit" style="display: flex">
       <app-button
         *ngIf="isAuthor"
         style="margin: 0 1rem"
         color="primary"
         icon="edit"
         label="Edit"
+        toolTip="Edit this article"
         (click)="editArticle()" />
       <app-button
         *ngIf="isAuthor"
@@ -19,6 +21,7 @@
         color="warn"
         icon="delete"
         label="Delete"
+        toolTip="Delete this article"
         (click)="openDeleteConfirmationDialog()" />
     </div>
   </mat-card-actions>

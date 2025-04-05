@@ -1,4 +1,4 @@
-@use '../../../../../styles.scss' as *;
+@use 'styles/styles.scss' as *;
 
 .article-card {
   display: flex;
@@ -13,11 +13,7 @@
   &__title {
     font-weight: 570;
     font-size: 1.6rem;
-    max-width: 20rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
+    @include text-clamp(20rem, 1);
   }
 
   &__subtitle {

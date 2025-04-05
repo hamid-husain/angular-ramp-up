@@ -15,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { HotToastService } from '@ngneat/hot-toast';
 import { firstValueFrom } from 'rxjs';
 
 import { constants } from '@app/app.constants';
@@ -86,7 +87,8 @@ export class CreateArticleComponent implements OnInit {
     private authService: AuthService,
     private articleServices: ArticlesService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private toast: HotToastService
   ) {
     this.user$ = this.authService.currentUser$;
 
@@ -116,6 +118,9 @@ export class CreateArticleComponent implements OnInit {
     });
   }
 
+  /**
+   * populate tags in array
+   */
   updateTags() {
     this.tags = this.articleForm.value.tagInput
       .split(',')
@@ -123,7 +128,11 @@ export class CreateArticleComponent implements OnInit {
       .filter((tag: string) => tag !== '');
   }
 
-  async loadArticle() {
+  /**
+   * populate articles for edit
+   * @returns Promise<void>
+   */
+  async loadArticle(): Promise<void> {
     if (this.articleID) {
       try {
         const article = await this.articleServices.loadArticleByID(
@@ -131,8 +140,11 @@ export class CreateArticleComponent implements OnInit {
         );
         if (article) {
           const user = await firstValueFrom(this.user$);
-          if (user?.displayName != article.author) {
-            this.router.navigate([constants.ROUTE_DASHBOARD]);
+          if (user?.email != article.email) {
+            this.toast.error(constants.ERR_UNAUTHORIZED);
+            this.router.navigate([
+              `${constants.ROUTES.ARTICLE}/${this.articleID}`,
+            ]);
             return;
           }
 
@@ -148,6 +160,11 @@ export class CreateArticleComponent implements OnInit {
     }
   }
 
+  /**
+   * save or update article in database
+   * @param article
+   * @returns Promise<void>
+   */
   async saveArticle(article: {
     title: string;
     desc: string;
@@ -166,7 +183,11 @@ export class CreateArticleComponent implements OnInit {
     }
   }
 
-  async createArticle() {
+  /**
+   * creates article
+   * @returns Promise<void>
+   */
+  async createArticle(): Promise<void> {
     if (!this.articleForm.valid) {
       return;
     }
@@ -180,10 +201,21 @@ export class CreateArticleComponent implements OnInit {
     };
 
     await this.saveArticle(newArticle);
-    this.router.navigate([constants.ROUTE_DASHBOARD]);
+    if (this.articleID) {
+      this.router.navigate([`${constants.ROUTES.ARTICLE}/${this.articleID}`]);
+    } else {
+      this.router.navigate([constants.ROUTES.DASHBOARD]);
+    }
   }
 
-  cancel() {
-    this.router.navigate([constants.ROUTE_DASHBOARD]);
+  /**
+   * cancel and go back
+   */
+  cancel(): void {
+    if (this.articleID) {
+      this.router.navigate([`${constants.ROUTES.ARTICLE}/${this.articleID}`]);
+    } else {
+      this.router.navigate([constants.ROUTES.DASHBOARD]);
+    }
   }
 }

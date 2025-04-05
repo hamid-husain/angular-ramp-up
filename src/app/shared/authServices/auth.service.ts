@@ -1,41 +1,43 @@
 import { Injectable } from '@angular/core';
-import { Auth, authState } from '@angular/fire/auth';
 
 import {
+  onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
   updateProfile,
+  User,
 } from 'firebase/auth';
-import { from, switchMap } from 'rxjs';
+import { from, map, Observable, switchMap } from 'rxjs';
+
+import { auth } from '@app/firebase.config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  currentUser$;
-  isAuthenticated = false;
+  currentUser$: Observable<User | null>;
+  isAuthenticated$: Observable<boolean>;
 
-  constructor(public auth: Auth) {
-    this.currentUser$ = authState(this.auth);
-
-    this.currentUser$.subscribe(user => {
-      this.isAuthenticated = !!user;
+  constructor() {
+    this.currentUser$ = new Observable<User | null>(subscriber => {
+      return onAuthStateChanged(auth, subscriber);
     });
+
+    this.isAuthenticated$ = this.currentUser$.pipe(map(user => !!user));
   }
 
   login(email: string, password: string) {
-    return from(signInWithEmailAndPassword(this.auth, email, password));
+    return from(signInWithEmailAndPassword(auth, email, password));
   }
 
   signup(username: string, email: string, password: string) {
-    return from(
-      createUserWithEmailAndPassword(this.auth, email, password)
-    ).pipe(
+    return from(createUserWithEmailAndPassword(auth, email, password)).pipe(
       switchMap(({ user }) => updateProfile(user, { displayName: username }))
     );
   }
 
   logout() {
-    return from(this.auth.signOut());
+    return from(signOut(auth));
   }
 }

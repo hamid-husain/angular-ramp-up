@@ -1,0 +1,7 @@
+@mixin text-clamp($width, $line) {
+  width: $width;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $line;
+  overflow: hidden;
+}
