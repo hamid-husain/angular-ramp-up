@@ -44,14 +44,14 @@
 
 <mat-dialog-actions>
   <app-button
+    color="warn"
+    label="Clear Filter"
+    toolTip="clear all filters applied"
+    (click)="clearFilter()" />
+  <app-button
     color="primary"
     label="Apply Filters"
     cdkFocusInitial
     toolTip="Apply filter on articles"
     (click)="applyFilters()" />
-  <app-button
-    color="warn"
-    label="Clear Filter"
-    toolTip="clear all filters applied"
-    (click)="clearFilter()" />
 </mat-dialog-actions>

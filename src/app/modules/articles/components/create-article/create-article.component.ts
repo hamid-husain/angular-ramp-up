@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -11,7 +11,9 @@ import {
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -31,26 +33,27 @@ function descriptionValidator(
 }
 
 function tagsValidator(control: AbstractControl): ValidationErrors | null {
-  const tags: string[] = control.value
-    ? control.value
-        .split(',')
-        .map((tag: string) => tag.trim())
-        .filter((tag: string) => tag !== '')
-    : [];
+  const tags = (control.value as string[]) || [];
 
-  const uniqueTags = new Set(tags);
+  if (!Array.isArray(tags)) {
+    return { invalidType: true };
+  }
 
   if (tags.length > 5) {
     return { maxTagsExceeded: true };
   }
 
-  const invalidTag = tags.find(tag => tag.length > 12);
-  if (invalidTag) {
+  if (tags.some(tag => tag.length > 12)) {
     return { tagTooLong: true };
   }
 
-  if (tags.length !== uniqueTags.size) {
+  const uniqueTags = new Set(tags.map(tag => tag.toLowerCase()));
+  if (uniqueTags.size !== tags.length) {
     return { duplicateTags: true };
+  }
+
+  if (tags.some(tag => tag.trim() === '')) {
+    return { emptyTag: true };
   }
 
   return null;
@@ -67,20 +70,20 @@ function tagsValidator(control: AbstractControl): ValidationErrors | null {
     CommonModule,
     ReactiveFormsModule,
     ButtonComponent,
+    MatChipsModule,
+    MatIconModule,
   ],
   templateUrl: './create-article.component.html',
   styleUrl: './create-article.component.scss',
 })
 export class CreateArticleComponent implements OnInit {
-  titleString = constants.TITLE;
-
   articleForm: FormGroup;
   author = '';
   email = '';
   created_at: Date = new Date();
-  tags: string[] = [];
   editMode = false;
   articleID: string | null = '';
+  readonly reactiveKeywords = signal<string[]>([]);
   user$;
 
   constructor(
@@ -98,7 +101,7 @@ export class CreateArticleComponent implements OnInit {
         Validators.maxLength(100),
       ]),
       desc: new FormControl('', [Validators.required, descriptionValidator]),
-      tagInput: new FormControl('', [tagsValidator]),
+      tags: new FormControl<string[]>([], tagsValidator),
     });
   }
 
@@ -119,13 +122,34 @@ export class CreateArticleComponent implements OnInit {
   }
 
   /**
-   * populate tags in array
+   * function to remove tags entry
+   * @param keyword
    */
-  updateTags() {
-    this.tags = this.articleForm.value.tagInput
-      .split(',')
-      .map((tag: string) => tag.trim())
-      .filter((tag: string) => tag !== '');
+  removeReactiveKeyword(keyword: string) {
+    const updated = this.reactiveKeywords().filter(k => k !== keyword);
+
+    this.reactiveKeywords.set(updated);
+    this.articleForm.get('tags')?.setValue(updated);
+  }
+
+  get tagsControl(): FormControl {
+    return this.articleForm.get('tags') as FormControl;
+  }
+
+  /**
+   * function to add tags entry
+   * @param event
+   */
+  addReactiveKeyword(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    if (value && !this.reactiveKeywords().includes(value)) {
+      const updated = [...this.reactiveKeywords(), value];
+
+      this.reactiveKeywords.set(updated);
+      this.articleForm.get('tags')?.setValue(updated);
+    }
+    event.chipInput!.clear();
   }
 
   /**
@@ -147,11 +171,11 @@ export class CreateArticleComponent implements OnInit {
             ]);
             return;
           }
-
+          this.reactiveKeywords.set(article.tags);
           this.articleForm.patchValue({
             title: article.title,
             desc: article.desc,
-            tagInput: article.tags.join(', '),
+            tags: article.tags,
           });
         }
       } catch (error) {
@@ -196,7 +220,7 @@ export class CreateArticleComponent implements OnInit {
       desc: this.articleForm.value.desc,
       author: this.author,
       created_at: this.created_at,
-      tags: this.tags,
+      tags: this.articleForm.value.tags,
       email: this.email,
     };
 

@@ -34,7 +34,6 @@ export class DashboardService {
     lastVisible: DocumentSnapshot | null,
     firstVisible: DocumentSnapshot | null
   ) {
-    console.log(filter);
     try {
       const articlesCollection = collection(this.firestore, constants.ARTICLES);
       let articleQuery = query(
@@ -56,8 +55,6 @@ export class DashboardService {
         const nextDay = new Date(selectedDate);
         nextDay.setDate(selectedDate.getDate() + 1);
         nextDay.setHours(0, 0, 0, 0);
-        console.log(selectedDate);
-        console.log(nextDay);
         articleQuery = query(
           articleQuery,
           where(constants.CREATED_AT, '>=', selectedDate),

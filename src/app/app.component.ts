@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
@@ -20,7 +20,7 @@ import { NavbarComponent } from '@shared/navbar/navbar.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   isRootRoute = false;
   dashboardRoute = constants.ROUTES.DASHBOARD;
   title = 'mini-social-network';
@@ -29,9 +29,5 @@ export class AppComponent implements OnInit {
     this.router.events.subscribe(() => {
       this.isRootRoute = this.router.url === constants.ROUTES.ROOT;
     });
-  }
-
-  ngOnInit(): void {
-    console.log('app initialised', this.router.url);
   }
 }

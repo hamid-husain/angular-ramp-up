@@ -95,7 +95,6 @@ export class ArticleFilterComponent {
   }
 
   applyFilters() {
-    console.log(this.filter);
     this.dialogRef.close();
     let createdAt = this.filter.created_at;
     if (createdAt) {
