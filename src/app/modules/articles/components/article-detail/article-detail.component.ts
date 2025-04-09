@@ -81,6 +81,7 @@ export class ArticleDetailComponent implements OnInit {
       }
     } catch (error) {
       console.error(constants.ERR_LOADING_ARTICLE, error);
+      this.router.navigate(['404NotFound']);
     }
   }
 

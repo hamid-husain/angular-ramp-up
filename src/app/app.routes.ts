@@ -33,6 +33,13 @@ export const routes: Routes = [
         redirectTo: 'dashboard',
         pathMatch: 'full',
       },
+      {
+        path: '**',
+        loadComponent: () =>
+          import(
+            '@app/shared/components/pageNotFound/page-not-found.component'
+          ).then(m => m.PageNotFoundComponent),
+      },
     ],
   },
 ];
