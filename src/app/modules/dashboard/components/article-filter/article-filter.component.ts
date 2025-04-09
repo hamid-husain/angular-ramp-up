@@ -21,8 +21,8 @@ import { Router } from '@angular/router';
 import { map, Observable, startWith } from 'rxjs';
 
 import { Filter } from '@app/core/models/filter.model';
+import { ButtonComponent } from '@app/shared/components/button/button.component';
 import { DashboardService } from '@modules/dashboard/services/dashboard.service';
-import { ButtonComponent } from '@shared/button/button.component';
 
 @Component({
   selector: 'app-article-filter',

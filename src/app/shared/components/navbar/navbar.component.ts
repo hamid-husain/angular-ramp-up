@@ -11,8 +11,8 @@ import { Router, RouterLink } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 
 import { constants } from '@app/app.constants';
-import { AuthService } from '@shared/authServices/auth.service';
-import { ButtonComponent } from '@shared/button/button.component';
+import { ButtonComponent } from '@app/shared/components/button/button.component';
+import { AuthService } from '@app/shared/services/authServices/auth.service';
 
 @Component({
   selector: 'app-navbar',

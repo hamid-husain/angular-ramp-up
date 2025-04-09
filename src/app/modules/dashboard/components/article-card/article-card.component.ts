@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
 
 import { constants } from '@app/app.constants';
 import { Article } from '@app/core/models/article.model';
-import { ButtonComponent } from '@shared/button/button.component';
+import { ButtonComponent } from '@app/shared/components/button/button.component';
 
 @Component({
   selector: 'app-article-card',

@@ -17,8 +17,9 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { catchError, throwError } from 'rxjs';
 
 import { constants } from '@app/app.constants';
-import { AuthService } from '@shared/authServices/auth.service';
-import { ButtonComponent } from '@shared/button/button.component';
+import { ButtonComponent } from '@app/shared/components/button/button.component';
+import { AuthService } from '@app/shared/services/authServices/auth.service';
+import { DashboardRouteService } from '@app/shared/services/dashboardRouteServices/dashboard-route.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -61,7 +62,8 @@ export class SignUpComponent {
   constructor(
     private authService: AuthService,
     private toast: HotToastService,
-    private router: Router
+    private router: Router,
+    private dashboardRoute: DashboardRouteService
   ) {}
 
   get username() {
@@ -128,7 +130,11 @@ export class SignUpComponent {
         })
       )
       .subscribe({
-        next: () => this.router.navigate([constants.ROUTES.DASHBOARD]),
+        next: () => {
+          const { url, queryParams } = this.dashboardRoute.getDashboardRoute();
+          this.dashboardRoute.resetDashboardRoute();
+          this.router.navigate(url, { queryParams });
+        },
         error: err => console.error('Error: ', err),
       });
   }

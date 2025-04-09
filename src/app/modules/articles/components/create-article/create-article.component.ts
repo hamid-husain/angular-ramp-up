@@ -21,9 +21,9 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { firstValueFrom } from 'rxjs';
 
 import { constants } from '@app/app.constants';
-import { AuthService } from '@app/shared/authServices/auth.service';
+import { ButtonComponent } from '@app/shared/components/button/button.component';
+import { AuthService } from '@app/shared/services/authServices/auth.service';
 import { ArticlesService } from '@modules/articles/services/articles.service';
-import { ButtonComponent } from '@shared/button/button.component';
 
 function descriptionValidator(
   control: AbstractControl

@@ -11,10 +11,11 @@ import { Observable } from 'rxjs';
 
 import { constants } from '@app/app.constants';
 import { Article } from '@app/core/models/article.model';
+import { DashboardRouteService } from '@app/shared/services/dashboardRouteServices/dashboard-route.service';
 import { DeleteConfirmationComponent } from '@modules/articles/components/delete-confirmation/delete-confirmation.component';
 import { ArticlesService } from '@modules/articles/services/articles.service';
-import { AuthService } from '@shared/authServices/auth.service';
-import { ButtonComponent } from '@shared/button/button.component';
+import { ButtonComponent } from '@shared/components/button/button.component';
+import { AuthService } from '@shared/services/authServices/auth.service';
 
 @Component({
   selector: 'app-article-detail',
@@ -40,7 +41,8 @@ export class ArticleDetailComponent implements OnInit {
     private articleService: ArticlesService,
     private authService: AuthService,
     private activatedRoute: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private dashboardRoute: DashboardRouteService
   ) {
     this.user$ = this.authService.currentUser$;
 
@@ -60,7 +62,8 @@ export class ArticleDetailComponent implements OnInit {
    * back to dashboard
    */
   backToDashboard(): void {
-    this.router.navigate([constants.ROUTES.DASHBOARD]);
+    const { url, queryParams } = this.dashboardRoute.getDashboardRoute();
+    this.router.navigate(url, { queryParams });
   }
 
   /**

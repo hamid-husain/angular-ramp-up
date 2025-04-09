@@ -21,10 +21,11 @@ import { DocumentSnapshot } from 'firebase/firestore';
 import { constants } from '@app/app.constants';
 import { Article } from '@app/core/models/article.model';
 import { Filter } from '@app/core/models/filter.model';
+import { ButtonComponent } from '@app/shared/components/button/button.component';
+import { DashboardRouteService } from '@app/shared/services/dashboardRouteServices/dashboard-route.service';
 import { ArticleCardComponent } from '@modules/dashboard/components/article-card/article-card.component';
 import { ArticleFilterComponent } from '@modules/dashboard/components/article-filter/article-filter.component';
 import { DashboardService } from '@modules/dashboard/services/dashboard.service';
-import { ButtonComponent } from '@shared/button/button.component';
 
 @Component({
   selector: 'app-article-list',
@@ -74,11 +75,18 @@ export class ArticleListComponent implements OnInit {
     private dashboardService: DashboardService,
     private dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private dashboardRoute: DashboardRouteService
   ) {}
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
+      const tree = this.router.parseUrl(this.router.url);
+      const segments =
+        tree.root.children['primary']?.segments.map(s => s.path) || [];
+      const queryParams = tree.queryParams;
+      this.dashboardRoute.setDashboardRoute(segments, queryParams);
+
       this.filter.author = params[constants.AUTHOR] || '';
       this.filter.tags = params[constants.TAGS]
         ? params[constants.TAGS].split(',')

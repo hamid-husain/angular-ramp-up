@@ -18,8 +18,9 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { catchError, throwError } from 'rxjs';
 
 import { constants } from '@app/app.constants';
-import { AuthService } from '@shared/authServices/auth.service';
-import { ButtonComponent } from '@shared/button/button.component';
+import { ButtonComponent } from '@app/shared/components/button/button.component';
+import { AuthService } from '@app/shared/services/authServices/auth.service';
+import { DashboardRouteService } from '@app/shared/services/dashboardRouteServices/dashboard-route.service';
 
 @Component({
   selector: 'app-login',
@@ -48,7 +49,8 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private toast: HotToastService
+    private toast: HotToastService,
+    private dashboardRoute: DashboardRouteService
   ) {}
 
   get email() {
@@ -84,7 +86,11 @@ export class LoginComponent {
         })
       )
       .subscribe({
-        next: () => this.router.navigate([constants.ROUTES.DASHBOARD]),
+        next: () => {
+          const { url, queryParams } = this.dashboardRoute.getDashboardRoute();
+          this.dashboardRoute.resetDashboardRoute();
+          this.router.navigate(url, { queryParams });
+        },
         error: err => console.error('Error: ', err),
       });
   }

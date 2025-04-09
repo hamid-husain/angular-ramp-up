@@ -4,8 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 import { constants } from '@app/app.constants';
-import { ButtonComponent } from '@shared/button/button.component';
-import { NavbarComponent } from '@shared/navbar/navbar.component';
+import { ButtonComponent } from '@app/shared/components/button/button.component';
+import { NavbarComponent } from '@app/shared/components/navbar/navbar.component';
 
 @Component({
   selector: 'app-root',
