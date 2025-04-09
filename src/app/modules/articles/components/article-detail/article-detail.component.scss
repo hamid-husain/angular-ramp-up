@@ -1,0 +1,61 @@
+@use 'styles/styles.scss' as *;
+
+.article {
+  max-width: 90%;
+  margin: px-to-rem(20) auto;
+  padding: px-to-rem(20);
+  padding-bottom: 8rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+  &__header {
+    display: block;
+    padding-bottom: px-to-rem(16);
+    border-bottom: px-to-rem(1) solid #ddd;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+
+    &__title {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #333;
+      margin: 0;
+    }
+
+    &__tags {
+      mat-chip {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    &__meta {
+      font-size: 1rem;
+      color: #555;
+      margin-top: px-to-rem(8);
+    }
+  }
+
+  &__content {
+    margin-top: px-to-rem(20);
+    color: #333;
+
+    &__description {
+      font-size: 1.1rem;
+      color: #444;
+      line-height: 1.5;
+      margin-bottom: px-to-rem(20);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: space-between;
+
+    &__edit {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}

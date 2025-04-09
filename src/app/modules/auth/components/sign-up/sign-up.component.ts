@@ -1,12 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import {
-  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,53 +12,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
+
 import { HotToastService } from '@ngneat/hot-toast';
 import { catchError, throwError } from 'rxjs';
 
-import { AuthServicesService } from '../../services/auth-services.service';
-
-export function passwordStrengthValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const password = control.value;
-
-    const lengthValid = password && password.length >= 8;
-    const hasNumeric = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
-    const numericCount = (password.match(/\d/g) || []).length;
-    const specialCount = (password.match(/[!@#$%^&*(),.?":{}|<>]/g) || [])
-      .length;
-
-    if (
-      lengthValid &&
-      hasNumeric &&
-      hasSpecialChar &&
-      numericCount >= 2 &&
-      specialCount >= 2
-    ) {
-      return null;
-    }
-
-    return {
-      passwordStrength: true,
-    };
-  };
-}
-
-export function passwordMatchValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const password = control.get('password')?.value;
-    const cPassword = control.get('cPassword')?.value;
-
-    if (password && cPassword && password !== cPassword) {
-      return {
-        PasswordDoesntMatch: true,
-      };
-    }
-
-    return null;
-  };
-}
+import { constants } from '@app/app.constants';
+import { ButtonComponent } from '@app/shared/components/button/button.component';
+import { AuthService } from '@app/shared/services/authServices/auth.service';
+import { DashboardRouteService } from '@app/shared/services/dashboardRouteServices/dashboard-route.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -74,71 +32,110 @@ export function passwordMatchValidator(): ValidatorFn {
     MatInputModule,
     ReactiveFormsModule,
     RouterLink,
+    ButtonComponent,
   ],
   templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.css',
+  styleUrl: './sign-up.component.scss',
 })
 export class SignUpComponent {
-  signupForm = new FormGroup(
-    {
-      username: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [
-        Validators.required,
-        passwordStrengthValidator(),
-      ]),
-      cPassword: new FormControl('', [Validators.required]),
-    },
-    { validators: passwordMatchValidator() }
-  );
+  loginRoute = constants.ROUTES.LOGIN;
+
+  signupForm = new FormGroup({
+    username: new FormControl('', [
+      Validators.minLength(3),
+      Validators.required,
+      Validators.maxLength(12),
+    ]),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.email,
+      Validators.maxLength(254),
+    ]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.maxLength(20),
+    ]),
+    cPassword: new FormControl('', [Validators.required]),
+  });
 
   constructor(
-    private authService: AuthServicesService,
+    private authService: AuthService,
     private toast: HotToastService,
-    private router: Router
+    private router: Router,
+    private dashboardRoute: DashboardRouteService
   ) {}
 
   get username() {
-    return this.signupForm.get('username');
+    return this.signupForm.get(constants.USERNAME);
   }
   get email() {
-    return this.signupForm.get('email');
+    return this.signupForm.get(constants.EMAIL);
   }
   get password() {
-    return this.signupForm.get('password');
+    return this.signupForm.get(constants.PASSWORD);
   }
   get cPassword() {
-    return this.signupForm.get('cPassword');
+    return this.signupForm.get(constants.CPASSWORD);
   }
 
   submit() {
     if (!this.signupForm.valid) {
+      const usernameLength = this.username?.value?.length || 0;
+      if (usernameLength < 3) {
+        this.toast.error(constants.ERR_USERMAME_MIN);
+      }
+
+      if (this.password?.value !== this.cPassword?.value) {
+        this.toast.error(constants.ERR_PASSWORD_CPASSWORD_MATCH);
+      }
+
+      const password = this.password?.value;
+      if (password) {
+        const isPasswordLengthValid = password.length >= 8;
+        const hasNumeric = /\d/.test(password);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        const numericCount = (password.match(/\d/g) || []).length;
+        const specialCount = (password.match(/[!@#$%^&*(),.?":{}|<>]/g) || [])
+          .length;
+
+        if (
+          !isPasswordLengthValid ||
+          !hasNumeric ||
+          !hasSpecialChar ||
+          numericCount < 2 ||
+          specialCount < 2
+        ) {
+          this.toast.error(constants.ERR_PASSWORD_STRENGTH);
+        }
+      }
+
       return;
     }
 
     const { username, email, password } = this.signupForm.value;
-    console.log(username);
-    console.log(email);
-    console.log(password);
 
     this.authService
       .signup(username!, email!, password!)
       .pipe(
         this.toast.observe({
-          loading: 'Signing in....',
-          success: 'Signed up successfully',
+          loading: constants.SIGNUP_LOADING,
+          success: constants.SIGNUP_SUCCESS,
           error: ({ message }) => `there is an error: ${message}`,
         }),
-        catchError((err, caught) => {
+        catchError(err => {
           this.toast.close();
-          this.toast.error('An error occurred. Please try again later.');
-          console.log('error: ', err);
+          this.toast.error(constants.ERR_ERROR);
           return throwError(() => err);
         })
       )
       .subscribe({
-        next: () => this.router.navigate(['/dashboard']),
-        error: err => console.log('Error: ', err),
+        next: () => {
+          const { url, queryParams } = this.dashboardRoute.getDashboardRoute();
+          this.dashboardRoute.resetDashboardRoute();
+          this.router.navigate(url, { queryParams });
+        },
+        error: err => console.error('Error: ', err),
       });
   }
 }

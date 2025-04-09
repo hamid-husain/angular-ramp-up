@@ -1,0 +1,29 @@
+<div [ngSwitch]="theme">
+  <button
+    *ngSwitchCase=""
+    mat-button
+    [style]="style"
+    [color]="color"
+    [disabled]="disabled"
+    [type]="type"
+    [matTooltip]="toolTip"
+    [routerLink]="routerLink">
+    <mat-icon [style]="iconStyle">{{ icon }}</mat-icon
+    >{{ label }}
+  </button>
+  <button
+    *ngSwitchCase="'stroked'"
+    mat-stroked-button
+    [style]="style"
+    [color]="color"
+    [disabled]="disabled"
+    [type]="type"
+    [matTooltip]="toolTip"
+    [ngClass]="{ 'filter-applied': isFilterApplied }"
+    [matBadge]="filterBadge"
+    [matBadgeHidden]="!isFilterApplied"
+    [routerLink]="routerLink">
+    <mat-icon [style]="iconStyle">{{ icon }}</mat-icon
+    >{{ label }}
+  </button>
+</div>

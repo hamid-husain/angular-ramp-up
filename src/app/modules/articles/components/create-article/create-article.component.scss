@@ -1,0 +1,35 @@
+@use 'styles/styles.scss' as *;
+
+.create-article-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.create-article-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: px-to-rem(600);
+  padding: px-to-rem(20);
+  box-shadow: 0 px-to-rem(4) px-to-rem(4) rgba(0, 0, 0, 0.1);
+  border-radius: px-to-rem(8);
+
+  mat-card-header {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.actions {
+  margin-top: px-to-rem(20);
+  display: flex;
+  justify-content: space-between;
+}

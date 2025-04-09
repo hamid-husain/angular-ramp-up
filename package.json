@@ -20,7 +20,6 @@
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",
     "@angular/core": "^19.2.0",
-    "@angular/fire": "^19.0.0",
     "@angular/forms": "^19.2.0",
     "@angular/material": "^19.2.3",
     "@angular/platform-browser": "^19.2.0",
@@ -28,8 +27,10 @@
     "@angular/router": "^19.2.0",
     "@ngneat/hot-toast": "^6.1.0",
     "@ngneat/overview": "^5.1.1",
-    "firebase": "^11.4.0",
+    "firebase": "^11.6.0",
+    "ngx-mat-select-search": "^8.0.0",
     "rxjs": "~7.8.0",
+    "sass-migrator": "^2.3.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
@@ -37,6 +38,9 @@
     "@angular-builders/custom-webpack": "^19.0.0",
     "@angular-builders/dev-server": "^7.3.1",
     "@angular-devkit/build-angular": "^19.2.1",
+    "@angular-eslint/eslint-plugin": "^19.3.0",
+    "@angular-eslint/eslint-plugin-template": "^19.3.0",
+    "@angular-eslint/template-parser": "^19.3.0",
     "@angular/cli": "^19.2.1",
     "@angular/compiler-cli": "^19.2.0",
     "@types/jasmine": "~5.1.0",
@@ -45,9 +49,13 @@
     "dotenv-webpack": "^8.1.0",
     "eslint": "^9.22.0",
     "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-angular": "^4.1.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.5",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-unused-imports": "^4.1.4",
+    "husky": "^9.1.7",
     "jasmine-core": "~5.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
@@ -56,8 +64,14 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "prettier": "^3.5.3",
     "prettier-eslint": "^16.3.0",
+    "prettier-plugin-organize-attributes": "^1.0.0",
     "schematics-scss-migrate": "^2.3.17",
     "typescript": "~5.7.2",
     "typescript-eslint": "8.26.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint:eslint:fix && npm run format"
+    }
   }
 }

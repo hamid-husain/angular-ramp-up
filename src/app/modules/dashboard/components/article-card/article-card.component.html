@@ -1,0 +1,28 @@
+<mat-card class="article-card">
+  <mat-card-header>
+    <mat-card-title class="article-card__title">{{
+      article.title
+    }}</mat-card-title>
+    <mat-card-subtitle class="article-card__subtitle"
+      >{{ article.author }} | {{ article.created_at | date }}</mat-card-subtitle
+    >
+  </mat-card-header>
+  <mat-card-content class="article-card__desc">
+    <p>{{ article.desc }}</p>
+  </mat-card-content>
+  <mat-chip-set class="article-card__tags">
+    <mat-chip
+      *ngFor="let tag of article.tags"
+      class="article-card__tags__tag"
+      >{{ tag }}</mat-chip
+    >
+  </mat-chip-set>
+  <mat-card-actions class="article-card__card-action">
+    <app-button
+      mat-button
+      color="primary"
+      label="Read More"
+      toolTip="Read the full article"
+      [routerLink]="`${articleRoute}/${article.id}`" />
+  </mat-card-actions>
+</mat-card>

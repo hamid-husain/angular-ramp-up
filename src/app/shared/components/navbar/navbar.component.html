@@ -1,0 +1,37 @@
+<header>
+  <mat-toolbar class="navbar" color="primary">
+    <a class="navbar__brand" routerLink="{{ RouteRoot }}"
+      >Mini-Social-Network</a
+    >
+
+    <ng-container
+      *ngIf="authService.currentUser$ | async as user; else loginButton">
+      <div class="navbar__button">
+        <app-button
+          *ngIf="currentRoute !== RouteDashboard"
+          mat-button
+          label="Dashboard"
+          icon="dashboard"
+          toolTip="Go to Dashboard"
+          routerLink="{{ RouteDashboard }}" />
+        <app-button
+          icon="logout"
+          label="Logout"
+          toolTip="Log out of your account"
+          (click)="logout()" />
+      </div>
+    </ng-container>
+
+    <ng-template #loginButton>
+      <div class="navbar__button">
+        <app-button
+          [routerLink]="currentRoute === RouteLogin ? RouteSignup : RouteLogin"
+          [toolTip]="
+            currentRoute === RouteLogin ? 'Click to sign up' : 'Click to login'
+          "
+          [icon]="currentRoute === RouteLogin ? signUpIcon : LoginIcon"
+          [label]="currentRoute === RouteLogin ? SignUp : Login" />
+      </div>
+    </ng-template>
+  </mat-toolbar>
+</header>

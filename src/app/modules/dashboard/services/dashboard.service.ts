@@ -1,103 +1,176 @@
 import { Injectable } from '@angular/core';
-import { getDocs, getFirestore, collection, addDoc, query, where, orderBy, limit, startAfter, DocumentSnapshot } from 'firebase/firestore';
+
+import {
+  addDoc,
+  collection,
+  DocumentSnapshot,
+  endBefore,
+  getDocs,
+  getFirestore,
+  limit,
+  limitToLast,
+  orderBy,
+  query,
+  startAfter,
+  where,
+} from 'firebase/firestore';
+
+import { constants } from '@app/app.constants';
+import { Article } from '@app/core/models/article.model';
+import { Filter } from '@app/core/models/filter.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DashboardService {
-  private firestore=getFirestore()
+  private firestore = getFirestore();
 
-  authors = new Set<string>
-  tags = new Set<string>
+  authors = new Set<string>();
+  tags = new Set<string>();
 
-  constructor() { }
-
-  async fetchArticles(filter:{author: string, tag: string, created_at: Date | null}, pageSize:number, lastVisible:DocumentSnapshot|null){
+  async fetchArticles(
+    filter: Filter,
+    pageSize: number,
+    lastVisible: DocumentSnapshot | null,
+    firstVisible: DocumentSnapshot | null
+  ) {
     try {
-      const articlesCollection = collection(this.firestore, 'articles');
-      let articleQuery = query(articlesCollection, orderBy('created_at'), limit(pageSize))
+      const articlesCollection = collection(this.firestore, constants.ARTICLES);
+      let articleQuery = query(
+        articlesCollection,
+        orderBy(constants.CREATED_AT),
+        limit(pageSize)
+      );
 
-      if(filter.author){
-        articleQuery = query(articleQuery,where('author','==',filter.author))
+      if (filter.author) {
+        articleQuery = query(
+          articleQuery,
+          where(constants.AUTHOR, '==', filter.author)
+        );
       }
-      if(filter.tag){
-        articleQuery = query(articleQuery, where('tag', '==', filter.tag));
-      }
-      if(filter.created_at){
-        const selectedDate= new Date()
-        selectedDate.setDate(filter.created_at.getDate());
+
+      if (filter.created_at) {
+        const selectedDate = new Date(filter.created_at);
         selectedDate.setHours(0, 0, 0, 0);
-        const nextDay = new Date();
+        const nextDay = new Date(selectedDate);
         nextDay.setDate(selectedDate.getDate() + 1);
-        nextDay.setHours(0,0,0,0);
-        articleQuery = query(articleQuery, where('created_at', '>=', selectedDate), where('created_at','<',nextDay));
+        nextDay.setHours(0, 0, 0, 0);
+        articleQuery = query(
+          articleQuery,
+          where(constants.CREATED_AT, '>=', selectedDate),
+          where(constants.CREATED_AT, '<', nextDay)
+        );
       }
 
-      if(lastVisible){
-        articleQuery = query(articleQuery, startAfter(lastVisible))
+      if (lastVisible != null) {
+        articleQuery = query(articleQuery, startAfter(lastVisible));
       }
+
+      if (firstVisible != null) {
+        articleQuery = query(
+          articleQuery,
+          endBefore(firstVisible),
+          limitToLast(pageSize)
+        );
+      }
+
       const articlesSnapshot = await getDocs(articleQuery);
-      const articleList: any[] = [];
-      let lastVisibleDoc: DocumentSnapshot | null = null;
-      articlesSnapshot.forEach((doc) => {
-        const article=doc.data()
+      const articleList: Article[] = [];
+      const lastVisibleDoc: DocumentSnapshot | null =
+        articlesSnapshot.docs[articlesSnapshot.size - 1];
+      const firstVisibleDoc = articlesSnapshot.docs[0];
+      articlesSnapshot.forEach(doc => {
+        const article = doc.data();
         articleList.push({
           id: doc.id,
-          ...article,
-          created_at: article['created_at'].toDate()
+          title: article[constants.TITLE],
+          desc: article[constants.DESC],
+          tags: article[constants.TAGS],
+          created_at: article[constants.CREATED_AT].toDate(),
+          author: article[constants.AUTHOR],
+          email: article[constants.EMAIL],
         });
-        lastVisibleDoc = doc;
-        if(article['author']){
-          this.authors.add(article['author'])
-        }
-        if(article['tag']){
-          this.tags.add(article['tag'])
-        }
       });
-      console.log(articleList);
-      console.log(lastVisibleDoc)
-      return {articleList, lastVisibleDoc};
+
+      const filteredArticles: Article[] = articleList.filter(article => {
+        return filter.tags.every(
+          tag => article.tags && article.tags.includes(tag)
+        );
+      });
+
+      return { articleList: filteredArticles, lastVisibleDoc, firstVisibleDoc };
     } catch (error) {
-      console.error('Error fetching articles:', error);
-      return { articleList: [], lastVisibleDoc: null };
+      console.error(constants.ERR_FETCHING_ARTICLE, error);
+      return { articleList: [], lastVisibleDoc: null, firstVisibleDoc: null };
     }
   }
 
-  async getArticlesCount(filter:{author: string, tag: string, created_at: Date|null}){
+  async getArticlesCount(filter: Filter) {
     try {
-      const articlesCollection = collection(this.firestore, 'articles');
-      let articleQuery = query(articlesCollection)
+      const articlesCollection = collection(this.firestore, constants.ARTICLES);
+      let articleQuery = query(articlesCollection);
 
-      if(filter.author){
-        articleQuery = query(articleQuery,where('author','==',filter.author))
+      if (filter.author) {
+        articleQuery = query(
+          articleQuery,
+          where(constants.AUTHOR, '==', filter.author)
+        );
       }
-      if(filter.tag){
-        articleQuery = query(articleQuery, where('tag', '==', filter.tag));
-      }
-      if(filter.created_at){
-        const selectedDate=new Date(filter.created_at);
-        selectedDate.setUTCHours(0, 0, 0, 0);
+
+      if (filter.created_at) {
+        const selectedDate = new Date(filter.created_at);
+        selectedDate.setHours(0, 0, 0, 0);
         const nextDay = new Date(selectedDate);
-        nextDay.setUTCDate(selectedDate.getUTCDate() + 1);
-        articleQuery = query(articleQuery, where('created_at', '>=', selectedDate.getTime()), where('created_at','<',nextDay.getTime()));
+        nextDay.setDate(selectedDate.getDate() + 1);
+        nextDay.setHours(0, 0, 0, 0);
+        articleQuery = query(
+          articleQuery,
+          where(constants.CREATED_AT, '>=', selectedDate),
+          where(constants.CREATED_AT, '<', nextDay)
+        );
       }
 
+      let count = 0;
       const articlesSnapshot = await getDocs(articleQuery);
-      return articlesSnapshot.size;
+      articlesSnapshot.forEach(doc => {
+        const article = doc.data();
+        if (
+          filter.tags.every(
+            tag =>
+              article[constants.TAGS] && article[constants.TAGS].includes(tag)
+          )
+        ) {
+          count++;
+        }
+
+        if (article[constants.AUTHOR]) {
+          this.authors.add(article[constants.AUTHOR]);
+        }
+        if (article[constants.TAGS]) {
+          article[constants.TAGS].forEach((tag: string) => {
+            this.tags.add(tag);
+          });
+        }
+      });
+
+      return count;
     } catch (error) {
-      console.error('Error counting articles:', error);
+      console.error(constants.ERR_COUNTING_ARTICLE, error);
       return 0;
     }
   }
 
-
-  async addArticle(article: { title: string; desc: string, author:string, created_at:Date }) {
+  async addArticle(article: {
+    title: string;
+    desc: string;
+    author: string;
+    created_at: Date;
+  }) {
     try {
-      const articlesCollection = collection(this.firestore, 'articles');
+      const articlesCollection = collection(this.firestore, constants.ARTICLES);
       await addDoc(articlesCollection, article);
-      console.log('Article added successfully!');
     } catch (error) {
-      console.error('Error adding article:', error);
+      console.error(constants.ERR_ADDING_ARTICLE, error);
     }
   }
 }

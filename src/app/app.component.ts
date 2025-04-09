@@ -1,15 +1,33 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { ToolbarComponent } from "@shared/toolbar/toolbar.component";
+import { MatButtonModule } from '@angular/material/button';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
-import { ToolbarComponent } from './shared/toolbar/toolbar.component';
+import { constants } from '@app/app.constants';
+import { ButtonComponent } from '@app/shared/components/button/button.component';
+import { NavbarComponent } from '@app/shared/components/navbar/navbar.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ToolbarComponent],
+  imports: [
+    RouterOutlet,
+    NavbarComponent,
+    RouterLink,
+    MatButtonModule,
+    CommonModule,
+    ButtonComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
+  isRootRoute = false;
+  dashboardRoute = constants.ROUTES.DASHBOARD;
   title = 'mini-social-network';
+
+  constructor(private router: Router) {
+    this.router.events.subscribe(() => {
+      this.isRootRoute = this.router.url === constants.ROUTES.ROOT;
+    });
+  }
 }

@@ -1,0 +1,43 @@
+<mat-card *ngIf="article" class="article">
+  <mat-card-actions class="article__actions">
+    <app-button
+      icon="arrow_back"
+      label="Back to Dashboard"
+      toolTip="Go back to dashboard"
+      color="accent"
+      (click)="backToDashboard()" />
+    <div class="article__action__edit" style="display: flex">
+      <app-button
+        *ngIf="isAuthor"
+        style="margin: 0 1rem"
+        color="primary"
+        icon="edit"
+        label="Edit"
+        toolTip="Edit this article"
+        (click)="editArticle()" />
+      <app-button
+        *ngIf="isAuthor"
+        mat-button
+        color="warn"
+        icon="delete"
+        label="Delete"
+        toolTip="Delete this article"
+        (click)="openDeleteConfirmationDialog()" />
+    </div>
+  </mat-card-actions>
+  <mat-card-header class="article__header">
+    <mat-card-title class="article__header_title">{{
+      article.title
+    }}</mat-card-title>
+    <mat-card-subtitle class="article__header__meta"
+      >{{ article.author }} | {{ article.created_at | date }}</mat-card-subtitle
+    >
+    <mat-chip-set class="article__header__tags">
+      <mat-chip *ngFor="let tag of article.tags">{{ tag }}</mat-chip>
+    </mat-chip-set>
+  </mat-card-header>
+
+  <mat-card-content class="article__content">
+    <p class="article__content__description">{{ article.desc }}</p>
+  </mat-card-content>
+</mat-card>

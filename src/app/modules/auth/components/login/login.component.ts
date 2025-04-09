@@ -13,10 +13,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
+
 import { HotToastService } from '@ngneat/hot-toast';
 import { catchError, throwError } from 'rxjs';
 
-import { AuthServicesService } from '../../services/auth-services.service';
+import { constants } from '@app/app.constants';
+import { ButtonComponent } from '@app/shared/components/button/button.component';
+import { AuthService } from '@app/shared/services/authServices/auth.service';
+import { DashboardRouteService } from '@app/shared/services/dashboardRouteServices/dashboard-route.service';
 
 @Component({
   selector: 'app-login',
@@ -29,28 +33,32 @@ import { AuthServicesService } from '../../services/auth-services.service';
     MatInputModule,
     ReactiveFormsModule,
     RouterLink,
+    ButtonComponent,
   ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  styleUrl: './login.component.scss',
 })
 export class LoginComponent {
+  signupRoute = constants.ROUTES.SIGNUP;
+
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required]),
   });
 
   constructor(
-    private authService: AuthServicesService,
+    private authService: AuthService,
     private router: Router,
-    private toast: HotToastService
+    private toast: HotToastService,
+    private dashboardRoute: DashboardRouteService
   ) {}
 
   get email() {
-    return this.loginForm.get('email');
+    return this.loginForm.get(constants.EMAIL);
   }
 
   get password() {
-    return this.loginForm.get('password');
+    return this.loginForm.get(constants.PASSWORD);
   }
 
   submit() {
@@ -59,30 +67,31 @@ export class LoginComponent {
     }
 
     const { email, password } = this.loginForm.value;
-    console.log(email);
-    console.log(password);
     this.authService
       .login(email!, password!)
       .pipe(
         this.toast.observe({
-          loading: 'Logging in....',
-          success: 'Logged in successfully',
+          loading: constants.LOGIN_LOADING,
+          success: constants.LOGIN_SUCCESS,
           error: ({ message }) => `there is an error: ${message}`,
         }),
-        catchError((err, caught) => {
+        catchError(err => {
           this.toast.close();
-          if (err.code === 'auth/invalid-credential') {
-            this.toast.error('Invalid credentials. Please try again.');
+          if (err.code === constants.CODE_INVALID_CREDENTIALS) {
+            this.toast.error(constants.ERR_INVALID_CREDENTIALS);
           } else {
-            this.toast.error('An error occurred. Please try again later.');
+            this.toast.error(constants.ERR_ERROR);
           }
-          console.log('error: ', err);
           return throwError(() => err);
         })
       )
       .subscribe({
-        next: () => this.router.navigate(['/dashboard']),
-        error: (err: any) => console.log('Error: ', err),
+        next: () => {
+          const { url, queryParams } = this.dashboardRoute.getDashboardRoute();
+          this.dashboardRoute.resetDashboardRoute();
+          this.router.navigate(url, { queryParams });
+        },
+        error: err => console.error('Error: ', err),
       });
   }
 }

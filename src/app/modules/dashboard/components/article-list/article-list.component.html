@@ -1,25 +1,26 @@
-<div class="article-container">
-  <div class="filter-section">
-    <button mat-button color="accent" (click)="openFilterModal()">
-      Filter Articles
-    </button>
+<div class="article">
+  <div class="article__tools">
+    <app-button
+      mat-button
+      color="accent"
+      matBadgePosition="before"
+      label="Filter Articles"
+      toolTip="Filter articles"
+      iconStyle="display:none;"
+      [isFilterApplied]="isFilterApplied()"
+      [matBadge]="filterBadge > 0 ? filterBadge : null"
+      (click)="openFilterModal()" />
+    <app-button
+      color="primary"
+      routerLink="/article/create"
+      icon="add_circle"
+      iconStyle="margin: 0.2rem"
+      toolTip="Create a new article"
+      label="Create Article" />
   </div>
-  <div class="article-list">
-    <mat-card *ngFor="let article of articles" class="article-card">
-      <mat-card-header>
-        <mat-card-title>{{ article.title }}</mat-card-title>
-        <mat-card-subtitle
-          >{{ article.author }} |
-          {{ article.created_at | date }}</mat-card-subtitle
-        >
-      </mat-card-header>
-      <mat-card-content>
-        <p>{{ article.desc }}</p>
-      </mat-card-content>
-      <mat-card-actions class="card-action">
-        <button mat-button color="primary">Read More</button>
-      </mat-card-actions>
-    </mat-card>
+  <div class="article__list">
+    <app-article-card *ngFor="let article of articles" [article]="article">
+    </app-article-card>
   </div>
 </div>
 <footer class="footer">

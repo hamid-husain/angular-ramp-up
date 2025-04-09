@@ -1,0 +1,14 @@
+@use '../abstracts' as *;
+
+.form-container {
+  display: block;
+  max-width: px-to-rem(300);
+  margin: auto;
+  background: $form-container-bg;
+  padding: px-to-rem(48);
+  border-radius: px-to-rem(16);
+}
+
+.form-container mat-form-field {
+  width: 100%;
+}

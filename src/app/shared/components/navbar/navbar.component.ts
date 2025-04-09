@@ -7,12 +7,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
+
 import { HotToastService } from '@ngneat/hot-toast';
 
-import { AuthServicesService } from '../../modules/auth/services/auth-services.service';
+import { constants } from '@app/app.constants';
+import { ButtonComponent } from '@app/shared/components/button/button.component';
+import { AuthService } from '@app/shared/services/authServices/auth.service';
 
 @Component({
-  selector: 'app-toolbar',
+  selector: 'app-navbar',
   imports: [
     MatToolbarModule,
     MatIconModule,
@@ -22,29 +25,47 @@ import { AuthServicesService } from '../../modules/auth/services/auth-services.s
     ReactiveFormsModule,
     RouterLink,
     CommonModule,
+    ButtonComponent,
   ],
-  templateUrl: './toolbar.component.html',
-  styleUrl: './toolbar.component.css',
+  templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.scss',
 })
-export class ToolbarComponent {
+export class NavbarComponent {
+  currentRoute = '';
+  RouteDashboard = constants.ROUTES.DASHBOARD;
+  RouteLogin = constants.ROUTES.LOGIN;
+  RouteRoot = constants.ROUTES.ROOT;
+  RouteSignup = constants.ROUTES.SIGNUP;
+  Login = constants.LOGIN;
+  SignUp = constants.SIGNUP;
+  LoginIcon = constants.LOGIN_ICON;
+  signUpIcon = constants.SIGNUP_ICON;
+
   constructor(
-    public authService: AuthServicesService,
+    public authService: AuthService,
     private router: Router,
     private toast: HotToastService
-  ) {}
+  ) {
+    this.router.events.subscribe(() => {
+      this.currentRoute = this.router.url.split('?')[0];
+    });
+  }
 
+  /**
+   * User logout
+   */
   logout() {
     this.authService
       .logout()
       .pipe(
         this.toast.observe({
-          loading: 'Logging out....',
-          success: 'Logged out successfully',
+          loading: constants.LOGOUT_LOADING,
+          success: constants.LOGOUT_SUCCESS,
           error: ({ message }) => `there is an error: ${message}`,
         })
       )
       .subscribe(() => {
-        this.router.navigate(['/']);
+        this.router.navigate([constants.ROUTES.LOGIN]);
       });
   }
 }

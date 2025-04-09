@@ -1,17 +1,28 @@
-import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatCardModule } from '@angular/material/card';
+import { Component, Inject } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { FormsModule } from '@angular/forms';
-import { DashboardService } from '@dashboardServices/dashboard.service';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { Router } from '@angular/router';
+
+import { map, Observable, startWith } from 'rxjs';
+
+import { Filter } from '@app/core/models/filter.model';
+import { ButtonComponent } from '@app/shared/components/button/button.component';
+import { DashboardService } from '@modules/dashboard/services/dashboard.service';
 
 @Component({
   selector: 'app-article-filter',
@@ -26,37 +37,111 @@ import { DashboardService } from '@dashboardServices/dashboard.service';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatDialogModule, 
-    FormsModule
+    MatDialogModule,
+    FormsModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    ButtonComponent,
   ],
   templateUrl: './article-filter.component.html',
-  styleUrl: './article-filter.component.scss'
+  styleUrl: './article-filter.component.scss',
 })
 export class ArticleFilterComponent {
-  authors;
-  tags;
-  
-  constructor(private dashboardService: DashboardService, private dialogRef: MatDialogRef<ArticleFilterComponent>,  @Inject(MAT_DIALOG_DATA) public data: any ) {
-    if(data){
-      this.filter={...data}
-    }
+  authorInput = new FormControl<string>('');
+  authors: string[];
+  filteredAuthors: Observable<string[]>;
+  tags: string[];
 
-    this.authors = this.dashboardService.authors
-    this.tags=this. dashboardService.tags
-    
-  }
-
-  filter = {
+  filter: Filter = {
     author: '',
-    created_at: '',
-    tag: ''
+    created_at: null,
+    tags: [],
   };
 
+  searchText = '';
+
+  constructor(
+    private dashboardService: DashboardService,
+    private dialogRef: MatDialogRef<ArticleFilterComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Filter,
+    private router: Router
+  ) {
+    if (data) {
+      this.filter = { ...data };
+    }
+
+    this.authors = [...this.dashboardService.authors];
+    this.authors.sort();
+    this.tags = [...this.dashboardService.tags];
+    this.tags.sort();
+
+    this.authorInput.setValue(this.filter.author || '');
+
+    this.filteredAuthors = this.authorInput.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filterAuthors(value!))
+    );
+
+    this.authorInput.valueChanges.subscribe(value => {
+      this.filter.author = value || '';
+    });
+  }
+
+  private filterAuthors(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.authors.filter(author =>
+      author.toLowerCase().includes(filterValue)
+    );
+  }
+
   applyFilters() {
-    this.dialogRef.close(this.filter)
+    this.dialogRef.close();
+    let createdAt = this.filter.created_at;
+    if (createdAt) {
+      createdAt = new Date(createdAt);
+      createdAt.setHours(0, 0, 0, 0);
+    }
+    this.router.navigate([], {
+      queryParams: {
+        author: this.filter.author,
+        tags: this.filter.tags.join(','),
+        created_at: createdAt ? this.formatDateToISO(createdAt) : null,
+        pageIndex: 0,
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 
   closeDialog() {
-    this.dialogRef.close()
+    this.dialogRef.close();
+  }
+
+  resetDate() {
+    this.filter.created_at = null;
+  }
+
+  clearFilter(): void {
+    this.closeDialog();
+    this.filter = {
+      author: '',
+      created_at: null,
+      tags: [''],
+    };
+    this.router.navigate([], {
+      queryParams: {
+        author: null,
+        tags: null,
+        created_at: null,
+        pageIndex: null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  formatDateToISO(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}T00:00:00.000Z`;
   }
 }

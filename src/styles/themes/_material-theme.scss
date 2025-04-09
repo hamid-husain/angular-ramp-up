@@ -1,0 +1,8 @@
+@use '@ngneat/hot-toast/src/styles/styles.scss';
+@use '@angular/material' as mat;
+
+$theme: mat.define-theme();
+html {
+  @include mat.all-component-themes($theme);
+  @include mat.color-variants-backwards-compatibility($theme);
+}

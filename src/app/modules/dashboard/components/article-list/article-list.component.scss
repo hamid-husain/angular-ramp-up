@@ -1,40 +1,39 @@
-.article-container {
+@use 'styles/styles.scss' as *;
+
+.article {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  margin: 0px 20px;
-}
+  margin: px-to-rem(0) px-to-rem(20);
 
-.filter-section{
-  display: flex;
-  justify-content: flex-end; 
-  padding: 8px 0;
-  margin: 16px;
-}
+  &__tools {
+    display: flex;
+    justify-content: flex-end;
+    padding: px-to-rem(8) 0;
+    margin: px-to-rem(16);
 
-.article-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-}
-  
-.article-card {
-  display: flex;
-  flex-direction: column;
-  background-color: #f9f9f9;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-  
-.card-action {
-  margin-top: auto;
-  display: flex;
-  justify-content: flex-end;
+    button {
+      margin-right: 0.5rem;
+    }
+
+    &__filter-applied {
+      background-color: #546c85 !important;
+      color: white !important;
+    }
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: px-to-rem(20);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
 }
 
 .footer {
-  margin-top: 20px;
-  padding: 20px;
+  margin-top: px-to-rem(20);
+  padding: px-to-rem(20);
   text-align: center;
   background-color: #f8f8f8;
 }

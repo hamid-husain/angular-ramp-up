@@ -1,19 +1,45 @@
 import { Routes } from '@angular/router';
-import { authGuard } from '@guards/auth.guard';
 
-import { AppComponent } from './app.component';
 import { authGuard } from './core/guards/auth.guard';
-import { LoginComponent } from './modules/auth/login/login.component';
-import { SignUpComponent } from './modules/auth/sign-up/sign-up.component';
-import { DashboardComponent } from './modules/dashboard/dashboard.component';
 
 export const routes: Routes = [
-  { path: '', component: AppComponent },
-  { path: 'login', component: LoginComponent, canActivate: [authGuard] },
-  { path: 'signup', component: SignUpComponent, canActivate: [authGuard] },
   {
-    path: 'dashboard',
-    component: DashboardComponent,
-    canActivate: [authGuard],
+    path: '',
+    children: [
+      {
+        path: 'auth',
+        loadChildren: () =>
+          import('@app/modules/auth/auth.module').then(m => m.AuthModule),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'dashboard',
+        loadChildren: () =>
+          import('@app/modules/dashboard/dashboard.module').then(
+            m => m.DashboardModule
+          ),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'article',
+        loadChildren: () =>
+          import('@app/modules/articles/articles.module').then(
+            m => m.ArticlesModule
+          ),
+        canActivate: [authGuard],
+      },
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
+      },
+      {
+        path: '**',
+        loadComponent: () =>
+          import(
+            '@app/shared/components/pageNotFound/page-not-found.component'
+          ).then(m => m.PageNotFoundComponent),
+      },
+    ],
   },
 ];
